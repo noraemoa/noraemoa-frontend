@@ -8,7 +8,18 @@ export interface Request {
 export interface RequestDetail {
   id: number
   userId: number
+  username: string
   title: string
-  thumbnailUrl: string
+  thumbnailUrl?: string
   keywords: Keyword[]
+}
+
+export interface RequestFeedItem {
+  id: number
+  username?: string
+  title: string
+  thumbnailUrl?: string
+  keywords?: Keyword[]
+  trackCount: number
+  createdAt: string
 }

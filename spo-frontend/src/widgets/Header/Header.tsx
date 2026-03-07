@@ -1,11 +1,31 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import styles from './Header.module.css'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { logout } from '../../features/auth/api/authApi'
 import { AuthOnly, GuestOnly } from '../../shared/components/AuthVisibility'
 import MenuModal from '../../shared/modals/MenuModal'
+import { useState } from 'react'
 
 export default function Header() {
+  const [search, setSearch] = useState('')
+  const [isSubmitted, setSubmit] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (isSubmitted) return
+
+    try {
+      setSubmit(true)
+      navigate(`/search/${search}`)
+      setSearch('')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSubmit(false)
+    }
+  }
+
   const handleLogout = async () => {
     await logout()
     window.location.href = '/'
@@ -19,7 +39,18 @@ export default function Header() {
         <NavLink to={`/`} className={styles.homeBtn}>
           HOME
         </NavLink>
-        <div>search</div>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            required
+          />
+          <button type="submit" disabled={isSubmitted}>
+            검색
+          </button>
+        </form>
       </div>
 
       <AuthOnly>

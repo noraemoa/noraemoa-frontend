@@ -1,8 +1,11 @@
+export type Visibility = 'PRIVATE' | 'PUBLIC'
+
 export interface Playlist {
   id: number
-  userName: string
+  userId: number
+  username: string
   code?: string
   title: string
   thumbnailUrl?: string | null
-  visibility: string
+  visibility: Visibility
 }

@@ -1,8 +1,8 @@
 import { api } from '../../../shared/api/client'
 
-export async function getRequests() {
+export async function getAllRequests() {
   try {
-    const requests = await api.get(`/requests`)
+    const requests = await api.get(`/requests/feed`)
     return requests
   } catch (error) {
     console.error('Error: ' + error)
@@ -10,7 +10,27 @@ export async function getRequests() {
   }
 }
 
-export async function getRequestDetails(requestId: number) {
+export async function getMyRequests() {
+  try {
+    const requests = await api.get(`/requests/me`)
+    return requests
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
+export async function getMyRequestDetails(requestId: number) {
+  try {
+    const details = await api.get(`/requests/me/${requestId}`)
+    return details
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
+export async function getRequestFeedDetails(requestId: number) {
   try {
     const details = await api.get(`/requests/${requestId}`)
     return details

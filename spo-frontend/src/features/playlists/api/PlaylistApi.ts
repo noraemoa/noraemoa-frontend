@@ -1,4 +1,5 @@
 import { api } from '../../../shared/api/client'
+import type { TrackCreateRequestDto } from '../../../types/track'
 
 export async function getMyPlaylists() {
   try {
@@ -76,6 +77,33 @@ export async function updatePlaylistTitle(playlistId: number, title: string) {
     const data = { title }
     const res = await api.patch(`/playlists/${playlistId}`, data)
     return res
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
+export async function updatePlaylistVisibility(
+  playlistId: number,
+  visibility: string
+) {
+  try {
+    const data = { visibility }
+    const res = await api.patch(`/playlists/${playlistId}/visibility`, data)
+    return res
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
+export async function addTrackToPlaylist(
+  playlistId: number,
+  dto: TrackCreateRequestDto
+) {
+  try {
+    const response = await api.post(`/playlists/${playlistId}/tracks`, dto)
+    return response
   } catch (error) {
     console.error('Error: ' + error)
     throw error

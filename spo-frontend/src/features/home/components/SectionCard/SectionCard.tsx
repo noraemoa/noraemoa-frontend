@@ -1,49 +1,74 @@
 import { useNavigate } from 'react-router-dom'
-import { DEFAULT_THUMBNAIL } from '../../../../widgets/PlaylistSide/PlaylistSide'
 import styles from './SectionCard.module.css'
 import type { SectionItem } from '../../../../types/section'
+import { useEffect, useState } from 'react'
+import { sections } from '../../config/section.config'
+import { DEFAULT_THUMBNAIL } from '../../../../utils/image'
 
 interface SectionCardProps {
-  sectionTitle: string
-  sectionItems: SectionItem[]
+  sectionId: number
   playlistVersion: number
 }
 
 export default function SectionCard({
-  sectionTitle,
-  sectionItems,
+  sectionId,
   playlistVersion,
 }: SectionCardProps) {
+  const sectionIdx = sectionId - 1
+  const [items, setItems] = useState<SectionItem[]>([])
   const navigate = useNavigate()
-  const handleSection = (category: string) => {
-    navigate(`/section/${category}`)
+  const handleSection = (id: number) => {
+    navigate(`/section/${id}`)
   }
   const handlePlaylist = (playlistId: number) => {
     navigate(`/detail/playlist/${playlistId}`)
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const section = sections.at(sectionIdx)
+      if (!section) return
+      const res = await (await section.fetch()).slice(0, 10)
+      setItems(res)
+    }
+    fetchData()
+  }, [sectionIdx])
+
   return (
-    <div>
-      <h1>{sectionTitle}</h1>
-      <button onClick={() => handleSection(sectionTitle)}>더보기</button>
-      {sectionItems.map((sectionItem) => (
-        <div
-          key={sectionItem.id}
-          className={styles.card}
-          onClick={() => handlePlaylist(sectionItem.id)}
+    <div className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>
+          {sections.at(sectionIdx)?.title}
+        </h2>
+        <button
+          className={styles.moreBtn}
+          onClick={() => handleSection(sectionId)}
         >
-          <img
-            src={
-              sectionItem.thumbnailUrl
-                ? `${import.meta.env.VITE_API_URL}${sectionItem.thumbnailUrl}?v=${playlistVersion}`
-                : DEFAULT_THUMBNAIL
-            }
-            alt=""
-            className={styles.thumbnail}
-          />
-          <div>{sectionItem.title}</div>
-          <div>{sectionItem.creator}</div>
-        </div>
-      ))}
+          더보기
+        </button>
+      </div>
+
+      <div className={styles.list}>
+        {items.map((item) => (
+          <div
+            key={item.id}
+            className={styles.card}
+            onClick={() => handlePlaylist(item.id)}
+          >
+            <img
+              src={
+                item.thumbnailUrl
+                  ? `${import.meta.env.VITE_API_URL}${item.thumbnailUrl}?v=${playlistVersion}`
+                  : DEFAULT_THUMBNAIL
+              }
+              alt=""
+              className={styles.thumbnail}
+            />
+            <div className={styles.title}>{item.title}</div>
+            <div className={styles.creator}>{item.creator}</div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

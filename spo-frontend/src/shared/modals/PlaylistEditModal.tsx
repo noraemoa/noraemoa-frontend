@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactModal from 'react-modal'
-import { DEFAULT_THUMBNAIL } from '../../widgets/PlaylistSide/PlaylistSide'
+import { DEFAULT_THUMBNAIL } from '../../utils/image'
 
 const customModalStyles: ReactModal.Styles = {
   overlay: {

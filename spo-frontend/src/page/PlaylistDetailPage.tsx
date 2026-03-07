@@ -2,27 +2,37 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import {
   deleteRequest,
-  getRequestDetails,
+  getRequestFeedDetails,
   getRequestTracks,
   updateRequestTitle,
   uploadRequestThumbnail,
 } from '../features/request/api/RequestApi'
 import styles from '../features/playlists/components/PlaylistDetail/PlaylistDetail.module.css'
 import PlaylistEditModal from '../shared/modals/PlaylistEditModal'
-import { DEFAULT_THUMBNAIL } from '../widgets/PlaylistSide/PlaylistSide'
 import type { Track } from '../types/track'
 import {
   deletePlaylist,
   getPlaylistDetails,
   getPlaylistTracks,
   updatePlaylistTitle,
+  updatePlaylistVisibility,
   uploadPlaylistThumbnail,
 } from '../features/playlists/api/PlaylistApi'
 import type { RequestDetail } from '../types/request'
-import type { Playlist } from '../types/playlist'
+import type { Playlist, Visibility } from '../types/playlist'
+import MenuModal from '../shared/modals/MenuModal'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { useAuthStore } from '../shared/auth/authStore'
+import { DEFAULT_REQUEST_THUMBNAIL, DEFAULT_THUMBNAIL } from '../utils/image'
 
 type Source = 'playlist' | 'request'
-type Detail = { title: string; thumbnailUrl: string | null }
+type Detail = {
+  userId: number
+  username: string
+  title: string
+  thumbnailUrl: string | null
+  visibility: Visibility
+}
 const isSource = (s: string | undefined): s is Source =>
   s === 'playlist' || s === 'request'
 
@@ -35,6 +45,9 @@ export default function PlaylistDetailPage() {
   const [refreshKey, setRefreshKey] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const userId = useAuthStore((s) => s.userId)
+  const isOwner = userId !== null && detail?.userId === userId
+
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { refreshPlaylists } = useOutletContext<{
     refreshPlaylists: () => void
@@ -45,7 +58,9 @@ export default function PlaylistDetailPage() {
 
   const srcThumbnailUrl = thumbnailUrl
     ? `${import.meta.env.VITE_API_URL}${thumbnailUrl}?v=${refreshKey}`
-    : DEFAULT_THUMBNAIL
+    : source === 'playlist'
+      ? DEFAULT_THUMBNAIL
+      : DEFAULT_REQUEST_THUMBNAIL
 
   const openModal = () => setModalOpen(true)
   const closeModal = () => setModalOpen(false)
@@ -57,14 +72,18 @@ export default function PlaylistDetailPage() {
     try {
       if (source === 'request') {
         const [reqRes, traRes] = await Promise.all([
-          getRequestDetails(numericId),
+          getRequestFeedDetails(numericId),
           getRequestTracks(numericId),
         ])
         const req = reqRes.data as RequestDetail
+        console.log('feed: ', req)
 
         setDetail({
+          userId: req.userId,
+          username: req.username,
           title: req.title,
           thumbnailUrl: req.thumbnailUrl ?? null,
+          visibility: 'PUBLIC',
         })
         setTracks(traRes.data)
       } else if (source === 'playlist') {
@@ -75,8 +94,11 @@ export default function PlaylistDetailPage() {
         const req = plsRes.data as Playlist
 
         setDetail({
+          userId: req.userId,
+          username: req.username,
           title: req.title,
           thumbnailUrl: req.thumbnailUrl ?? null,
+          visibility: req.visibility,
         })
         setTracks(traRes.data)
       }
@@ -144,6 +166,19 @@ export default function PlaylistDetailPage() {
     }
   }
 
+  const handleVisibility = async () => {
+    if (!detail || source !== 'playlist') return
+    const newVisibility = detail.visibility === 'PRIVATE' ? 'PUBLIC' : 'PRIVATE'
+    try {
+      await updatePlaylistVisibility(numericId, newVisibility)
+      setDetail((prev) =>
+        prev ? { ...prev, visibility: newVisibility } : prev
+      )
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   useEffect(() => {
     reload()
   }, [reload])
@@ -151,21 +186,112 @@ export default function PlaylistDetailPage() {
   if (isLoading) return <div>Loading</div>
   if (!detail) return <div>Not found</div>
   return (
-    <div>
-      <img
-        src={srcThumbnailUrl}
-        alt=""
-        className={styles.thumbnail}
-        onClick={!isLoading ? openModal : undefined}
-      />
+    <div className={styles.page}>
+      <div className={styles.hero}>
+        <div className={styles.heroInner}>
+          <img
+            src={srcThumbnailUrl}
+            alt=""
+            className={styles.thumbnail}
+            onClick={!isLoading && isOwner ? openModal : undefined}
+          />
 
-      <h2
-        className={styles.detailTitle}
-        onClick={!isLoading ? openModal : undefined}
-      >
-        {detail?.title}
-      </h2>
+          <div className={styles.headerInfo}>
+            <div className={styles.badge}>
+              {source === 'playlist'
+                ? detail.visibility === 'PRIVATE'
+                  ? '비공개 플레이리스트'
+                  : '공개 플레이리스트'
+                : '플리 요청'}
+            </div>
+            <h2
+              className={styles.detailTitle}
+              onClick={!isLoading && isOwner ? openModal : undefined}
+            >
+              {detail?.title}
+            </h2>
 
+            <div className={styles.meta}>
+              <span className={styles.metaUser}>{detail.username}</span>
+              <span className={styles.dot}>•</span>
+              <span>{tracks.length}곡</span>
+            </div>
+
+            {isOwner ? (
+              <div className={styles.actions}>
+                <MenuModal triggerName={'...'}>
+                  <DropdownMenu.Content
+                    className={styles.dropdownContent}
+                    side="bottom"
+                    align="end"
+                    sideOffset={19}
+                    collisionPadding={3}
+                    sticky="always"
+                  >
+                    <DropdownMenu.Item asChild>
+                      <button
+                        type="button"
+                        className={styles.menuItem}
+                        onClick={handleDeletePlaylist}
+                        disabled={isDeleting}
+                      >
+                        삭제하기
+                      </button>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Separator
+                      className={styles.dropdownSeparator}
+                    />
+
+                    {source === 'playlist' ? (
+                      <DropdownMenu.Item asChild>
+                        <button
+                          type="button"
+                          className={styles.menuItem}
+                          onClick={handleVisibility}
+                        >
+                          {detail.visibility === 'PRIVATE'
+                            ? '공개로 설정'
+                            : '비공개로 설정'}
+                        </button>
+                      </DropdownMenu.Item>
+                    ) : null}
+                  </DropdownMenu.Content>
+                </MenuModal>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.body}>
+        <div className={styles.trackHeader}>
+          <div className={styles.colIndex}>#</div>
+          <div className={styles.colTitle}>제목</div>
+          <div className={styles.colMeta}>아티스트</div>
+          <div className={styles.colRight}>길이</div>
+        </div>
+
+        <div className={styles.trackList}>
+          {tracks.map((track, idx) => {
+            return (
+              <div key={track.trackId} className={styles.trackRow}>
+                <div className={styles.colIndex}>{idx + 1}</div>
+                <div className={styles.colTitle}>
+                  <div className={styles.trackName}>{track.name}</div>
+                </div>
+                <div className={styles.colMeta}>{track.artist ?? '-'}</div>
+                <div className={styles.colRight}>
+                  {Math.floor(track.durationMs / 60000)}:
+                  {Math.floor((track.durationMs % 60000) / 1000)
+                    .toString()
+                    .padStart(2, '0')}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
       <PlaylistEditModal
         isOpen={modalOpen}
         onClose={closeModal}
@@ -176,16 +302,6 @@ export default function PlaylistDetailPage() {
         title={detail.title}
         onSave={afterSave}
       />
-
-      <button onClick={handleDeletePlaylist} disabled={isDeleting}>
-        {isDeleting ? '삭제 중...' : '삭제하기'}
-      </button>
-
-      {tracks.map((track) => (
-        <div key={track.trackId}>
-          <h2>{track.name}</h2>
-        </div>
-      ))}
     </div>
   )
 }

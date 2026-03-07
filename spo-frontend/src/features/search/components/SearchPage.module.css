@@ -1,0 +1,149 @@
+.page {
+    min-height: 100vh;
+    background: transparent;
+    color: #fff;
+    padding: 32px;
+}
+
+.sectionTitle {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.topSection {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 32px;
+    margin-bottom: 40px;
+}
+
+/* ---------- Artist ---------- */
+
+.artistCard {
+    background: #181818;
+    border-radius: 14px;
+    padding: 24px;
+    transition: background 0.2s ease;
+}
+
+.artistCard:hover {
+    background: #242424;
+}
+
+.artistImage {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 18px;
+}
+
+.artistName {
+    font-size: 52px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.artistType {
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+/* ---------- Track list ---------- */
+
+.trackList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.trackRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.15s;
+}
+
+.trackRow:hover {
+    background: #1a1a1a;
+}
+
+.trackLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.trackThumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.trackMeta {
+    display: flex;
+    flex-direction: column;
+}
+
+.trackName {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.trackArtist {
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+.trackDuration {
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+/* ---------- Bottom cards ---------- */
+
+.bottomSection {
+    margin-top: 30px;
+}
+
+.cardRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 18px;
+}
+
+.playlistCard {
+    background: rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 12px;
+    transition:
+        transform 120ms ease,
+        background 120ms ease;
+}
+
+.playlistCard:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-2px);
+}
+
+.playlistImage {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.playlistTitle {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.playlistDesc {
+    font-size: 13px;
+    color: #b3b3b3;
+}

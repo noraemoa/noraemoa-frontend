@@ -1,5 +1,5 @@
 import type { Playlist } from '../../../../types/playlist'
-import { DEFAULT_THUMBNAIL } from '../../../../widgets/PlaylistSide/PlaylistSide'
+import { DEFAULT_THUMBNAIL } from '../../../../utils/image'
 import styles from './MyPlaylistSide.module.css'
 import { NavLink } from 'react-router-dom'
 

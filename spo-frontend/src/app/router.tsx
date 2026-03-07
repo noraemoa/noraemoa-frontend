@@ -8,6 +8,7 @@ import SectionPage from '../features/home/pages/SectionPage/SectionPage.tsx'
 import LoginPage from '../features/auth/pages/LoginPage.tsx'
 import ProfilePage from '../page/ProfilePage.tsx'
 import SignupPage from '../features/auth/pages/SignupPage.tsx'
+import SearchPage from '../page/SearchPage.tsx'
 
 export const router = createBrowserRouter([
   {
@@ -34,12 +35,16 @@ export const router = createBrowserRouter([
         element: <CommunityHome />,
       },
       {
-        path: 'section/:category',
+        path: 'section/:id',
         element: <SectionPage />,
       },
       {
         path: 'profile',
         element: <ProfilePage />,
+      },
+      {
+        path: 'search/:id',
+        element: <SearchPage />,
       },
     ],
   },

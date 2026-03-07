@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import styles from './PlaylistSide.module.css'
 import { useNavigate } from 'react-router-dom'
-import { addRequest, getRequests } from '../../features/request/api/RequestApi'
+import {
+  addRequest,
+  getMyRequests,
+} from '../../features/request/api/RequestApi'
 import PlaylistNRequestCreateModal from '../../shared/modals/PlaylistNRequestCreateModal'
 import RequestPlaylistSide from './components/RequestPlaylistSide/RequestPlaylistSide'
 import type { Request } from '../../types/request'
@@ -18,7 +21,6 @@ export type PlaylistSideProps = {
   playlistVersion: number
   refreshPlaylists: () => void
 }
-export const DEFAULT_THUMBNAIL = '/images/default-music-icon.png'
 
 type Kind = 'playlist' | 'request'
 type ModalKind = Kind | null
@@ -43,7 +45,7 @@ export default function PlaylistSide({
   const navigate = useNavigate()
 
   const fetchRequests = useCallback(async () => {
-    const res = await getRequests()
+    const res = await getMyRequests()
     const mapped: Request[] = (res.data as Request[]).map((r) => ({
       id: r.id,
       title: r.title,
@@ -57,7 +59,8 @@ export default function PlaylistSide({
     const res = await getMyPlaylists()
     const mapped: Playlist[] = (res.data as Playlist[]).map((p) => ({
       id: p.id,
-      userName: p.userName,
+      userId: p.userId,
+      username: p.username,
       code: p.code,
       title: p.title,
       thumbnailUrl: p.thumbnailUrl ?? null,

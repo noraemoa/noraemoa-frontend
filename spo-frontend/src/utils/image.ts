@@ -1,8 +1,9 @@
-const apiUrl = import.meta.env.VITE_API_URL;
-const DEFAULT_THUMBNAIL = "../../../public/images/default-music-icon.png";
+const apiUrl = import.meta.env.VITE_API_URL
+export const DEFAULT_THUMBNAIL = '/images/default-music-icon.png'
+export const DEFAULT_REQUEST_THUMBNAIL = '/images/default-request-icon.png'
 
-export function resolveImageUrl(thumbnailUrl?:string|null){
-    if(!thumbnailUrl) return DEFAULT_THUMBNAIL;
-    if(thumbnailUrl.startsWith("http")) return thumbnailUrl;
-    return `${apiUrl}${thumbnailUrl}`;
+export function resolveImageUrl(thumbnailUrl?: string | null) {
+  if (!thumbnailUrl) return DEFAULT_THUMBNAIL
+  if (thumbnailUrl.startsWith('http')) return thumbnailUrl
+  return `${apiUrl}${thumbnailUrl}`
 }

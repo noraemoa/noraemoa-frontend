@@ -1,5 +1,5 @@
 import type { Request } from '../../../../types/request'
-import { DEFAULT_THUMBNAIL } from '../../../../widgets/PlaylistSide/PlaylistSide'
+import { DEFAULT_REQUEST_THUMBNAIL } from '../../../../utils/image'
 import styles from './RequestPlaylistSide.module.css'
 import { NavLink } from 'react-router-dom'
 
@@ -31,7 +31,7 @@ export default function RequestPlaylistSide({
               src={
                 request.thumbnailUrl
                   ? `${import.meta.env.VITE_API_URL}${request.thumbnailUrl}?v=${playlistVersion}`
-                  : DEFAULT_THUMBNAIL
+                  : DEFAULT_REQUEST_THUMBNAIL
               }
               alt=""
               className={styles.thumbnail}
