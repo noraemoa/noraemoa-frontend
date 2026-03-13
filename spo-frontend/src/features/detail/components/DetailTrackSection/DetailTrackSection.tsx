@@ -1,14 +1,13 @@
-import { IoHeart } from 'react-icons/io5'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import styles from './DetailTrackSection.module.css'
-import type { Track, TrackCreateRequestDto } from '../../../../types/track'
+import type { Track } from '../../../../types/track'
 import {
   getTrackMenuActions,
   type TrackMenuAction,
 } from '../../policies/trackMenuActions'
 import { useEffect, useState } from 'react'
-import { addTrackLike, deleteTrackLike } from '../../../track/api/TrackApi'
+import LikeBtn from '../../../../shared/components/LikeBtn'
 
 interface DetailTrackSectionProps {
   source: string | null
@@ -25,36 +24,26 @@ export default function DetailTrackSection({
 }: DetailTrackSectionProps) {
   const [localTracks, setLocalTracks] = useState<Track | null>(tracks)
   useEffect(() => {
-    console.log('트랙', tracks)
     setLocalTracks(tracks)
   }, [tracks])
 
-  const toggleLike = async (liked: boolean, dto: TrackCreateRequestDto) => {
-    try {
-      if (liked) {
-        await deleteTrackLike(dto.spotifyId)
-      } else {
-        await addTrackLike(dto)
+  const handleSetLocalTracks = (liked: boolean, spotifyId: string) => {
+    setLocalTracks((prev) => {
+      if (!prev?.tracks) return prev
+
+      return {
+        ...prev,
+        tracks: prev.tracks.map((item) => ({
+          track:
+            item.track.spotifyId === spotifyId
+              ? { ...item.track, liked: !liked }
+              : item.track,
+          artist: item.artist,
+        })),
       }
-
-      setLocalTracks((prev) => {
-        if (!prev?.tracks) return prev
-
-        return {
-          ...prev,
-          tracks: prev.tracks.map((item) => ({
-            track:
-              item.track.spotifyId === dto.spotifyId
-                ? { ...item.track, liked: !liked }
-                : item.track,
-            artist: item.artist,
-          })),
-        }
-      })
-    } catch (e) {
-      console.error(e)
-    }
+    })
   }
+
   return (
     <div className={styles.body}>
       <div className={styles.trackHeader}>
@@ -91,24 +80,20 @@ export default function DetailTrackSection({
                     .padStart(2, '0')}
                 </span>
               </div>
-              <button
+
+              <LikeBtn
+                isLike={track.track.liked}
+                trackDto={{
+                  spotifyId: track.track.spotifyId,
+                  name: track.track.name,
+                  artist: track.artist?.name,
+                  album: track.track.album,
+                  imageUrl: track.track.imageUrl,
+                  durationMs: track.track.durationMs,
+                }}
+                handleSetLocalTracks={handleSetLocalTracks}
                 className={styles.likeBtn}
-                onClick={() =>
-                  toggleLike(track.track.liked, {
-                    spotifyId: track.track.spotifyId,
-                    name: track.track.name,
-                    artist: track.artist?.name,
-                    album: track.track.album,
-                    imageUrl: track.track.imageUrl,
-                    durationMs: track.track.durationMs,
-                  })
-                }
-              >
-                <IoHeart
-                  color={track.track.liked ? 'red' : 'white'}
-                  size={20}
-                />
-              </button>
+              />
 
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>

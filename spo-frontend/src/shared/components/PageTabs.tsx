@@ -5,19 +5,40 @@ export default function PageTabs() {
   return (
     <>
       <div className={styles.tabs}>
-        <NavLink to="/" className={styles.tab}>
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) =>
+            `${styles.tab} ${isActive ? styles.active : ''}`
+          }
+        >
           모두
         </NavLink>
 
-        <NavLink to="/" className={styles.tab}>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `${styles.tab} ${isActive ? styles.active : ''}`
+          }
+        >
           플레이리스트
         </NavLink>
 
-        <NavLink to="/community" className={styles.tab}>
+        <NavLink
+          to="/community"
+          className={({ isActive }) =>
+            `${styles.tab} ${isActive ? styles.active : ''}`
+          }
+        >
           플리 요청함
         </NavLink>
 
-        <NavLink to="/today" className={styles.tab}>
+        <NavLink
+          to="/today"
+          className={({ isActive }) =>
+            `${styles.tab} ${isActive ? styles.active : ''}`
+          }
+        >
           오늘의 한 곡
         </NavLink>
       </div>

@@ -21,14 +21,14 @@ export default function SearchPage() {
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const navigate = useNavigate()
 
+  const keyword = id ?? ''
+
   const handleAddTrack = async (
     playlistId: number,
     dto: TrackCreateRequestDto
   ) => {
     try {
-      console.log('click: ', dto)
       await addTrackToPlaylist(playlistId, dto)
-
       navigate(`/detail/playlist/${playlistId}`)
     } catch (e) {
       console.error(e)
@@ -38,7 +38,6 @@ export default function SearchPage() {
   const handleFetchPlaylists = async () => {
     try {
       const playlistsRes = await getMyPlaylists()
-      console.log('playlistsRes.data', playlistsRes.data)
       setPlaylists(playlistsRes.data)
     } catch (e) {
       console.error(e)
@@ -47,21 +46,32 @@ export default function SearchPage() {
 
   useEffect(() => {
     const fetchTracks = async () => {
-      const tracksRes = await searchTrack(id ?? '')
-      setTracks(tracksRes.data)
+      try {
+        const tracksRes = await searchTrack(keyword)
+        setTracks(tracksRes.data)
+      } catch (e) {
+        console.error(e)
+        setTracks(null)
+      }
     }
 
     fetchTracks()
-  }, [id])
+  }, [keyword])
 
   useEffect(() => {
-    if (tracks?.tracks.length === 0) return
+    if (!tracks?.tracks?.length) return
+
     const fetchArtist = async () => {
-      const artistId = tracks?.tracks.at(0)?.artist?.artistId
-      if (!artistId) return
-      const artistRes = await getArtist(artistId)
-      setArtist(artistRes.data)
+      try {
+        const artistId = tracks.tracks.at(0)?.artist?.artistId
+        if (!artistId) return
+        const artistRes = await getArtist(artistId)
+        setArtist(artistRes.data)
+      } catch (e) {
+        console.error(e)
+      }
     }
+
     fetchArtist()
   }, [tracks])
 
@@ -71,86 +81,93 @@ export default function SearchPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.topSection}>
-        <div className={styles.artistBlock}>
-          <h2 className={styles.sectionTitle}>아티스트</h2>
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <div className={styles.label}>Search</div>
+          <h1 className={styles.heroTitle}>“{keyword}” 검색 결과</h1>
+          <p className={styles.heroDescription}>
+            찾고 있는 곡을 둘러보고, 좋아요를 남기거나 플레이리스트에
+            추가해보세요.
+          </p>
+        </div>
+      </section>
 
-          <div className={styles.artistCard}>
-            <img
-              src={artist?.images?.at(0)?.url}
-              alt={artist?.name ?? 'artist'}
-              className={styles.artistImage}
-            />
-            <div className={styles.artistName}>{artist?.name}</div>
+      <section className={styles.resultsSection}>
+        <div className={styles.resultsHeader}>
+          <div className={styles.resultsHeaderText}>
+            <h2 className={styles.resultsTitle}>검색 결과</h2>
+            <p className={styles.resultsDescription}>
+              가장 관련도 높은 아티스트와 곡을 정리해서 보여드려요.
+            </p>
           </div>
         </div>
 
-        <div className={styles.trackBlock}>
-          <h2 className={styles.sectionTitle}>곡</h2>
-          <SearchItems onLikeBtn={true} tracks={tracks}>
-            {(track) => (
-              <MenuModal
-                triggerName="+"
-                className={styles.addBtn}
-                key={track.trackId}
-              >
-                <DropdownMenu.Content
-                  className={styles.dropdownContent}
-                  side="bottom"
-                  align="end"
-                  sideOffset={19}
-                  collisionPadding={3}
-                  sticky="always"
-                >
-                  {playlists.map((p) => (
-                    <>
-                      <DropdownMenu.Item asChild key={p.id}>
-                        <button
-                          type="button"
-                          className={styles.menuItem}
-                          onClick={() =>
-                            handleAddTrack(p.id, {
-                              spotifyId: track.spotifyId,
-                              name: track.name,
-                              artist: track.artistName,
-                              album: track.album,
-                              imageUrl: track.imageUrl,
-                              durationMs: track.durationMs,
-                            })
-                          }
-                        >
-                          {p.title}
-                        </button>
-                      </DropdownMenu.Item>
-                      <DropdownMenu.Separator
-                        className={styles.dropdownSeparator}
-                      />
-                    </>
-                  ))}
-                </DropdownMenu.Content>
-              </MenuModal>
-            )}
-          </SearchItems>
-        </div>
-      </div>
-
-      <div className={styles.bottomSection}>
-        <h2 className={styles.sectionTitle}>{artist?.name} 피처링</h2>
-
-        <div className={styles.cardRow}>
-          {tracks?.tracks.map((i) => (
-            <div key={i.track.trackId} className={styles.playlistCard}>
-              <img
-                src={i.track.imageUrl}
-                alt={i.track.name}
-                className={styles.playlistImage}
-              />
-              <div className={styles.playlistTitle}>{i.track.name}</div>
-              <div className={styles.playlistDesc}>{i.artist?.name}</div>
+        <div className={styles.topSection}>
+          <div className={styles.artistBlock}>
+            <div className={styles.blockHeader}>
+              <h3 className={styles.blockTitle}>아티스트</h3>
             </div>
-          ))}
+
+            <div className={styles.artistCard}>
+              <div className={styles.artistLabel}>대표 아티스트</div>
+              <img
+                src={artist?.images?.at(0)?.url}
+                alt={artist?.name ?? 'artist'}
+                className={styles.artistImage}
+              />
+              <div className={styles.artistName}>{artist?.name ?? keyword}</div>
+            </div>
+          </div>
+
+          <div className={styles.trackBlock}>
+            <div className={styles.blockHeader}>
+              <h3 className={styles.blockTitle}>곡</h3>
+            </div>
+
+            <div className={styles.trackPanel}>
+              <SearchItems onLikeBtn={true} tracks={tracks}>
+                {(track) => (
+                  <MenuModal
+                    triggerName="+"
+                    className={styles.addBtn}
+                    key={track.trackId}
+                  >
+                    <DropdownMenu.Content
+                      className={styles.dropdownContent}
+                      side="bottom"
+                      align="end"
+                      sideOffset={19}
+                      collisionPadding={3}
+                      sticky="always"
+                    >
+                      {playlists.map((p) => (
+                        <DropdownMenu.Item asChild key={p.id}>
+                          <button
+                            type="button"
+                            className={styles.menuItem}
+                            onClick={() =>
+                              handleAddTrack(p.id, {
+                                spotifyId: track.spotifyId,
+                                name: track.name,
+                                artist: track.artistName,
+                                album: track.album,
+                                imageUrl: track.imageUrl,
+                                durationMs: track.durationMs,
+                              })
+                            }
+                          >
+                            {p.title}
+                          </button>
+                        </DropdownMenu.Item>
+                      ))}
+                    </DropdownMenu.Content>
+                  </MenuModal>
+                )}
+              </SearchItems>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import type { Playlist } from '../../../../types/playlist'
 import { DEFAULT_THUMBNAIL } from '../../../../utils/image'
-import styles from './MyPlaylistSide.module.css'
+import styles from '../shared/SidebarList.module.css'
 import { NavLink } from 'react-router-dom'
 
 interface MyPlaylistSideProps {
@@ -15,19 +15,22 @@ export default function MyPlaylistSide({
   playlistVersion,
 }: MyPlaylistSideProps) {
   return (
-    <div className={styles.playlist}>
+    <div className={styles.list}>
+      {sidebarOpen && (
+        <div className={styles.listMeta}>{playlists.length} playlists</div>
+      )}
+
       {playlists.map((playlist) => (
         <NavLink
           key={playlist.id}
           to={`/detail/playlist/${playlist.id}`}
+          title={!sidebarOpen ? playlist.title : undefined}
           className={({ isActive }) =>
-            isActive
-              ? `${styles.active} ${styles.playlistItemLink}`
-              : `${styles.playlistItemLink}`
+            `${styles.itemLink} ${isActive ? styles.active : ''}`
           }
         >
           <div
-            className={`${styles.playlistItem} ${!sidebarOpen ? styles.collapsedItem : ''}`}
+            className={`${styles.item} ${!sidebarOpen ? styles.collapsedItem : ''}`}
           >
             <img
               src={
@@ -35,17 +38,14 @@ export default function MyPlaylistSide({
                   ? `${import.meta.env.VITE_API_URL}${playlist.thumbnailUrl}?v=${playlistVersion}`
                   : DEFAULT_THUMBNAIL
               }
-              alt=""
+              alt={playlist.title}
               className={styles.thumbnail}
             />
-            {sidebarOpen && playlist.title}
+
+            {sidebarOpen && (
+              <span className={styles.itemText}>{playlist.title}</span>
+            )}
           </div>
-          {!sidebarOpen && (
-            <div className={styles.hoverCard}>
-              <div className={styles.hoverTitle}>{playlist.title}</div>
-              <span className={styles.hoverUser}>{playlist.username}</span>
-            </div>
-          )}
         </NavLink>
       ))}
     </div>

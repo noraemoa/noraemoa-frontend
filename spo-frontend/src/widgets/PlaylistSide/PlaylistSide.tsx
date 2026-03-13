@@ -51,7 +51,6 @@ export default function PlaylistSide({
       title: r.title,
       thumbnailUrl: r.thumbnailUrl ?? null,
     }))
-
     setRequests(mapped)
   }, [])
 
@@ -66,7 +65,6 @@ export default function PlaylistSide({
       thumbnailUrl: p.thumbnailUrl ?? null,
       visibility: p.visibility,
     }))
-
     setPlaylists(mapped)
   }, [])
 
@@ -82,11 +80,11 @@ export default function PlaylistSide({
         console.error(err)
       }
     }
+
     fetchLists()
   }, [selectedKind, fetchRequests, fetchPlaylists, playlistVersion])
 
   const handleSidebar = () => setSidebarOpen((s) => !s)
-
   const closeModal = () => setActiveModal(null)
 
   const addApi =
@@ -110,34 +108,53 @@ export default function PlaylistSide({
         className={styles.playlistSideContainer}
       >
         <div className={styles.plsHeader}>
-          <button onClick={handleSidebar}>사이드바</button>
+          <button
+            type="button"
+            className={styles.sideToggleBtn}
+            onClick={handleSidebar}
+            aria-label={sidebarOpen ? '사이드바 접기' : '사이드바 열기'}
+            title={sidebarOpen ? '사이드바 접기' : '사이드바 열기'}
+          >
+            {sidebarOpen ? '사이드바' : '≡'}
+          </button>
 
-          <div className={styles.optionWrapper}>
-            <div
-              className={styles.plsTitle}
-              onClick={() => setOptionOpen((prv) => !prv)}
-            >
-              <p>{OPTIONS.find((o) => o.kind === selectedKind)!.optionName}</p>
-            </div>
-            {optionOpen && (
-              <div className={styles.optionDropdown}>
-                {OPTIONS.map((o) => (
-                  <div
-                    key={o.optionName}
-                    className={styles.option}
-                    onClick={() => {
-                      setSelectedKind(o.kind)
-                      setOptionOpen(false)
-                    }}
-                  >
-                    {o.optionName}
-                  </div>
-                ))}
+          {sidebarOpen && (
+            <div className={styles.optionWrapper}>
+              <div
+                className={styles.plsTitle}
+                onClick={() => setOptionOpen((prev) => !prev)}
+              >
+                <p>
+                  {OPTIONS.find((o) => o.kind === selectedKind)!.optionName}
+                </p>
+                <span className={styles.chevron}>{optionOpen ? '−' : '+'}</span>
               </div>
-            )}
-          </div>
 
-          <MenuModal triggerName={sidebarOpen ? '+만들기' : '+'}>
+              {optionOpen && (
+                <div className={styles.optionDropdown}>
+                  {OPTIONS.map((o) => (
+                    <div
+                      key={o.optionName}
+                      className={`${styles.option} ${
+                        selectedKind === o.kind ? styles.optionActive : ''
+                      }`}
+                      onClick={() => {
+                        setSelectedKind(o.kind)
+                        setOptionOpen(false)
+                      }}
+                    >
+                      {o.optionName}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <MenuModal
+            triggerName={sidebarOpen ? '+ 만들기' : '+'}
+            className={styles.createTrigger}
+          >
             <DropdownMenu.Content
               className={styles.dropdownContent}
               side="bottom"
@@ -179,6 +196,7 @@ export default function PlaylistSide({
             />
           )}
         </div>
+
         <div className={styles.playlistListWrapper}>
           {selectedKind === 'playlist' ? (
             <MyPlaylistSide

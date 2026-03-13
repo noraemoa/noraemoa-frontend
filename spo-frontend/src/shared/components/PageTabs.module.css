@@ -1,34 +1,78 @@
 .tabs {
     display: flex;
+    align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
     margin-bottom: 12px;
 }
 
 .tab {
-    padding: 8px 14px;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.06);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(216, 217, 218, 0.08);
+    background: rgba(52, 56, 65, 0.34);
     text-decoration: none;
-    color: #ddd;
-    font-size: 14px;
-
+    color: rgba(216, 217, 218, 0.78);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     white-space: nowrap;
     word-break: keep-all;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 .tab:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(97, 103, 122, 0.28);
+    color: #FFFFFF;
+    border-color: rgba(255, 246, 224, 0.1);
+    transform: translateY(-1px);
 }
 
-.tab.active {
-    background: white;
-    color: black;
-    font-weight: 600;
+.active {
+    background: rgba(255, 246, 224, 0.08);
+    color: #FFF6E0;
+    border-color: rgba(255, 246, 224, 0.14);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.active:hover {
+    background: rgba(255, 246, 224, 0.1);
+    color: #FFF6E0;
 }
 
 .divider {
-    margin: 10px 0 20px;
+    margin: 10px 0 22px;
     border: none;
     height: 1px;
-    background: rgba(255, 255, 255, 0.08);
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(216, 217, 218, 0.1) 12%,
+            rgba(216, 217, 218, 0.08) 88%,
+            rgba(255, 255, 255, 0) 100%);
+}
+
+@media (max-width: 640px) {
+    .tabs {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .tab {
+        height: 32px;
+        padding: 0 12px;
+        font-size: 12px;
+    }
+
+    .divider {
+        margin: 8px 0 18px;
+    }
 }

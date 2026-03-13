@@ -1,9 +1,8 @@
-import type { SpotifyTrack, Track } from '../../../../types/track'
+import type { Track, TrackCreateRequestDto } from '../../../../types/track'
 import SearchItems from '../../../search/components/SearchItems'
 import styles from '../../../../shared/styles/SearchPanel.module.css'
 
-interface DetailSearchPanelProps {
-  id: number | null
+interface DailyTrackSearchPanelProps {
   searchTracks: Track | null
   searchModalOpen: boolean
   handleCloseSearch: () => void
@@ -12,11 +11,10 @@ interface DetailSearchPanelProps {
   setSearch: React.Dispatch<React.SetStateAction<string>>
   isSubmitted: boolean
   setSearchModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-  addTrack: (track: SpotifyTrack) => Promise<void>
+  handleSaveTodayTrack: (dto: TrackCreateRequestDto) => Promise<void>
 }
 
-export default function DetailSearchPanel({
-  id,
+export default function DailyTrackSearchPanel({
   searchTracks,
   searchModalOpen,
   handleCloseSearch,
@@ -25,14 +23,14 @@ export default function DetailSearchPanel({
   setSearch,
   isSubmitted,
   setSearchModalOpen,
-  addTrack,
-}: DetailSearchPanelProps) {
+  handleSaveTodayTrack,
+}: DailyTrackSearchPanelProps) {
   return (
     <div className={styles.bottom}>
       {searchModalOpen ? (
         <div className={styles.searchPanel}>
           <div className={styles.searchPanelHeader}>
-            <div className={styles.searchPanelTitle}>곡 검색</div>
+            <div className={styles.searchPanelTitle}>검색창</div>
             <button
               type="button"
               className={styles.searchCloseBtn}
@@ -60,12 +58,27 @@ export default function DetailSearchPanel({
             </button>
           </form>
 
-          <SearchItems
-            id={id}
-            onLikeBtn={false}
-            tracks={searchTracks}
-            addTrack={addTrack}
-          ></SearchItems>
+          <SearchItems onLikeBtn={true} tracks={searchTracks}>
+            {(track) => (
+              <button
+                key={track.spotifyId}
+                type="button"
+                className={styles.dailyTrackAddBtn}
+                onClick={() =>
+                  handleSaveTodayTrack({
+                    spotifyId: track.spotifyId,
+                    name: track.name,
+                    artist: track.artistName,
+                    album: track.album,
+                    imageUrl: track.imageUrl,
+                    durationMs: track.durationMs,
+                  })
+                }
+              >
+                +
+              </button>
+            )}
+          </SearchItems>
         </div>
       ) : (
         <button
@@ -73,7 +86,7 @@ export default function DetailSearchPanel({
           className={styles.searchOpenBtn}
           onClick={() => setSearchModalOpen((s) => !s)}
         >
-          더 찾아보기
+          오늘의 노래 찾아보기
         </button>
       )}
     </div>

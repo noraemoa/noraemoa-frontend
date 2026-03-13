@@ -113,3 +113,35 @@
     background: #3d4250;
     box-shadow: 0 0 0 2px #FFF6E0;
 }
+
+.dailyTrackAddBtn {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(216, 217, 218, 0.78);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.dailyTrackAddBtn:hover {
+    background: #343841;
+    color: #FFF6E0;
+    transform: scale(1.05);
+}
+
+.dailyTrackAddBtn:active {
+    transform: scale(0.98);
+}

@@ -11,22 +11,23 @@
 
     color: #D8D9DA;
 
-    padding: 4px;
-    border-radius: 6px;
+    padding: 6px;
+    border-radius: 8px;
 
     transition:
         background 0.15s ease,
         color 0.15s ease,
-        transform 0.15s ease;
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 .triggerBtn:hover {
-    background: #343841;
+    background: rgba(97, 103, 122, 0.22);
     color: #FFF6E0;
 }
 
 .triggerBtn:active {
-    transform: scale(0.96);
+    transform: scale(0.95);
 }
 
 .triggerBtn:focus-visible {

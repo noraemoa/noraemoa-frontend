@@ -2,3 +2,25 @@
     padding: 24px 32px 40px;
     color: #D8D9DA;
 }
+
+.tabsWrap {
+    margin-bottom: 8px;
+}
+
+.sections {
+    margin-top: 18px;
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 20px 16px 32px;
+    }
+
+    .tabsWrap {
+        margin-bottom: 4px;
+    }
+
+    .sections {
+        margin-top: 14px;
+    }
+}

@@ -12,21 +12,33 @@ export default function CommunityHome() {
     refreshPlaylists: () => void
     playlistVersion: number
   }>()
+
   const [requests, setRequests] = useState<RequestFeedItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
 
   const fetchData = async () => {
-    const res = await getAllRequests()
-    const map: RequestFeedItem[] = (res.data as RequestFeedItem[]).map((r) => ({
-      id: r.id,
-      username: r.username,
-      title: r.title,
-      thumbnailUrl: r.thumbnailUrl,
-      keywords: r.keywords,
-      trackCount: r.trackCount,
-      createdAt: r.createdAt,
-    }))
-    setRequests(map)
+    try {
+      setIsLoading(true)
+      const res = await getAllRequests()
+      const mapped: RequestFeedItem[] = (res.data as RequestFeedItem[]).map(
+        (r) => ({
+          id: r.id,
+          username: r.username,
+          title: r.title,
+          thumbnailUrl: r.thumbnailUrl,
+          keywords: r.keywords,
+          trackCount: r.trackCount,
+          createdAt: r.createdAt,
+        })
+      )
+      setRequests(mapped)
+    } catch (error) {
+      console.error(error)
+      setRequests([])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleFeed = (id: number) => {
@@ -39,39 +51,82 @@ export default function CommunityHome() {
 
   return (
     <div className={styles.container}>
-      <PageTabs />
-      {requests.map((request) => (
-        <div
-          key={request.id}
-          className={styles.card}
-          onClick={() => handleFeed(request.id)}
-        >
-          <img
-            src={
-              request.thumbnailUrl
-                ? `${import.meta.env.VITE_API_URL}${request.thumbnailUrl}?v=${playlistVersion}`
-                : DEFAULT_REQUEST_THUMBNAIL
-            }
-            alt=""
-            className={styles.thumbnail}
-          />
-          <div className={styles.content}>
-            <div className={styles.title}>{request.title}</div>
-            <div className={styles.keywords}>
-              {request.keywords?.map((k) => (
-                <span key={k.id} className={styles.keyword}>
-                  {k.rawText}
-                </span>
-              ))}
-            </div>
-
-            <div className={styles.meta}>
-              <span>{request.trackCount}곡</span>
-              <span>{formatFeedTime(request.createdAt)}</span>
-            </div>
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <div className={styles.heroCopy}>
+            <div className={styles.label}>Community</div>
+            <h1 className={styles.heroTitle}>플리 요청함</h1>
+            <p className={styles.heroDescription}>
+              지금 올라온 요청들을 둘러보고, 어울리는 노래를 추천해보세요.
+            </p>
           </div>
         </div>
-      ))}
+      </section>
+
+      <PageTabs />
+
+      <section className={styles.feedSection}>
+        <div className={styles.feedHeader}>
+          <div className={styles.feedHeaderText}>
+            <h2 className={styles.feedTitle}>최근 요청</h2>
+            <p className={styles.feedDescription}>
+              사람들이 지금 찾고 있는 분위기와 상황들을 모아봤어요.
+            </p>
+          </div>
+
+          <div className={styles.feedCount}>{requests.length} requests</div>
+        </div>
+
+        {isLoading ? (
+          <div className={styles.empty}>요청 목록을 불러오는 중이에요.</div>
+        ) : requests.length === 0 ? (
+          <div className={styles.empty}>
+            아직 등록된 요청이 없어요. 첫 번째 요청을 만들어보세요.
+          </div>
+        ) : (
+          <div className={styles.feedList}>
+            {requests.map((request) => (
+              <article
+                key={request.id}
+                className={styles.card}
+                onClick={() => handleFeed(request.id)}
+              >
+                <div className={styles.thumbnailWrap}>
+                  <img
+                    src={
+                      request.thumbnailUrl
+                        ? `${import.meta.env.VITE_API_URL}${request.thumbnailUrl}?v=${playlistVersion}`
+                        : DEFAULT_REQUEST_THUMBNAIL
+                    }
+                    alt={request.title}
+                    className={styles.thumbnail}
+                  />
+                </div>
+
+                <div className={styles.content}>
+                  <div className={styles.topRow}>
+                    <div className={styles.title}>{request.title}</div>
+                    <div className={styles.username}>@{request.username}</div>
+                  </div>
+
+                  <div className={styles.keywords}>
+                    {request.keywords?.slice(0, 4).map((k) => (
+                      <span key={k.id} className={styles.keyword}>
+                        {k.rawText}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className={styles.meta}>
+                    <span>{request.trackCount}곡</span>
+                    <span>{formatFeedTime(request.createdAt)}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   )
 }

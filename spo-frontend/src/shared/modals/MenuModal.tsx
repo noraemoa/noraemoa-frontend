@@ -14,7 +14,10 @@ export default function MenuModal({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className={`${styles.triggerBtn} ${className ?? ''}`}>
+        <button
+          type="button"
+          className={`${styles.triggerBtn}${className ? ` ${className}` : ''}`}
+        >
           {triggerName}
         </button>
       </DropdownMenu.Trigger>

@@ -1,0 +1,57 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <rect width="320" height="320" rx="28" fill="#343841"/>
+
+  <rect x="0.5" y="0.5" width="319" height="319" rx="27.5" stroke="rgba(216,217,218,0.08)"/>
+
+  <circle cx="248" cy="76" r="58" fill="rgba(255,246,224,0.04)"/>
+  <circle cx="70" cy="250" r="70" fill="rgba(255,246,224,0.03)"/>
+
+  <!-- Headband -->
+  <path
+    d="M90 160C90 110 120 80 160 80C200 80 230 110 230 160"
+    stroke="#FFF6E0"
+    stroke-width="12"
+    stroke-linecap="round"
+  />
+
+  <!-- Left ear -->
+  <rect
+    x="78"
+    y="160"
+    width="36"
+    height="60"
+    rx="12"
+    fill="#FFF6E0"
+  />
+
+  <!-- Right ear -->
+  <rect
+    x="206"
+    y="160"
+    width="36"
+    height="60"
+    rx="12"
+    fill="#FFF6E0"
+  />
+
+  <!-- subtle inner shadow -->
+  <rect
+    x="78"
+    y="160"
+    width="36"
+    height="60"
+    rx="12"
+    fill="rgba(0,0,0,0.15)"
+  />
+
+  <rect
+    x="206"
+    y="160"
+    width="36"
+    height="60"
+    rx="12"
+    fill="rgba(0,0,0,0.15)"
+  />
+
+</svg>

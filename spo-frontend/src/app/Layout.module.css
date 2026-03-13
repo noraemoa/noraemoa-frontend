@@ -56,7 +56,7 @@
     overflow: visible;
     background: transparent;
     position: relative;
-    z-index: 20;
+    z-index: 50;
 }
 
 .homePage {
