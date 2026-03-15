@@ -3,7 +3,9 @@ import styles from './SectionCard.module.css'
 import type { SectionItem } from '../../../../types/section'
 import { useEffect, useState } from 'react'
 import { sections } from '../../config/section.config'
-import { DEFAULT_THUMBNAIL } from '../../../../utils/image'
+import type { YesterdayDailyTrack } from '../../../../types/dailyTrack'
+import PlaylistResSectionCard from '../PlaylistResSectionCard/PlaylistResSectionCard'
+import DailyTrackResSectionCard from '../DailyTrackResSectionCard/DailyTrackResSectionCard'
 
 interface SectionCardProps {
   sectionId: number
@@ -11,13 +13,15 @@ interface SectionCardProps {
   featured?: boolean
 }
 
+type responseType = SectionItem | YesterdayDailyTrack
+
 export default function SectionCard({
   sectionId,
   playlistVersion,
   featured = false,
 }: SectionCardProps) {
   const sectionIdx = sectionId - 1
-  const [items, setItems] = useState<SectionItem[]>([])
+  const [items, setItems] = useState<responseType[]>([])
   const navigate = useNavigate()
 
   const handleSection = (id: number) => {
@@ -27,21 +31,18 @@ export default function SectionCard({
   const handlePlaylist = (playlistId: number) => {
     navigate(`/detail/playlist/${playlistId}`)
   }
-
+  const section = sections.at(sectionIdx)
   useEffect(() => {
     const fetchData = async () => {
-      const section = sections.at(sectionIdx)
       if (!section) return
       const res = await section.fetch()
       setItems(res.slice(0, 10))
     }
     fetchData()
-  }, [sectionIdx])
+  }, [section])
 
   const sectionTitle = sections.at(sectionIdx)?.title ?? ''
-  const sectionDescription = featured
-    ? '지금 많은 사람들이 저장하고 있는 플레이리스트예요.'
-    : '지금 바로 둘러볼 수 있는 플레이리스트 모음이에요.'
+  const sectionDescription = sections.at(sectionIdx)?.description ?? ''
 
   return (
     <section
@@ -62,28 +63,19 @@ export default function SectionCard({
       </div>
 
       <div className={`${styles.list} ${featured ? styles.featuredList : ''}`}>
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className={`${styles.card} ${featured ? styles.featuredCard : ''}`}
-            onClick={() => handlePlaylist(item.id)}
-          >
-            <div className={styles.thumbnailWrap}>
-              <img
-                src={
-                  item.thumbnailUrl
-                    ? `${import.meta.env.VITE_API_URL}${item.thumbnailUrl}?v=${playlistVersion}`
-                    : DEFAULT_THUMBNAIL
-                }
-                alt={item.title}
-                className={styles.thumbnail}
-              />
-            </div>
-
-            <div className={styles.title}>{item.title}</div>
-            <div className={styles.creator}>{item.creator}</div>
-          </div>
-        ))}
+        {section?.kind === 'daily-track' ? (
+          <DailyTrackResSectionCard
+            items={items as YesterdayDailyTrack[]}
+            featured={featured}
+          />
+        ) : (
+          <PlaylistResSectionCard
+            items={items as SectionItem[]}
+            featured={featured}
+            handlePlaylist={handlePlaylist}
+            playlistVersion={playlistVersion}
+          />
+        )}
       </div>
     </section>
   )

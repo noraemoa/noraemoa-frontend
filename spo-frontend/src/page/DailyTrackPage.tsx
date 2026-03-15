@@ -1,33 +1,39 @@
 import styles from '../features/dailyTrack/components/DailyTrack.module.css'
 import { useCallback, useEffect, useState } from 'react'
-import type { DailyTrack } from '../types/dailyTrack'
 import {
+  type DailyTrackEmotionOption,
+  type DailyTrack,
+  type DailyTrackEmotion,
+  type DailyTrackStreak,
+} from '../types/dailyTrack'
+import {
+  getCurrentStreak,
+  getMonthlyTracks,
   getMyDailyTracks,
   getTodayTrack,
+  saveTodayEmotion,
   saveTodayTrack,
 } from '../features/dailyTrack/api/DailyTrackApi'
 import type { TrackCreateRequestDto } from '../types/track'
-import { getTodayDate } from '../utils/date'
-import { useTrackSearch } from '../features/search/hooks/useTrackSearch'
-import DailyTrackSearchPanel from '../features/dailyTrack/components/DailyTrackSearchPanel/DailyTrackSearchPanel'
+import { getTodayDate, getYearMonth } from '../utils/date'
 import DailyTrackHero from '../features/dailyTrack/components/DailyTrackHero/DailyTrackHero'
 import DailyTrackHistorySection from '../features/dailyTrack/components/DailyTrackHistorySection/DailyTrackHistorySection'
+import ActionSection from '../features/dailyTrack/components/ActionSection/ActionSection'
+import { DAILY_TRACK_EMOTION_OPTIONS } from '../features/dailyTrack/constants/dailyTrackEmotion'
+import DailyTrackCalendarSection from '../features/dailyTrack/components/DailyTrackCalendarSection/DailyTrackCalendarSection'
+import axios from 'axios'
+import Toast from '../shared/components/Toast/Toast'
 
 export default function DailyTrackPage() {
   const [currentDate, setCurrentDate] = useState(getTodayDate())
   const [todayTrack, setTodayTrack] = useState<DailyTrack | null>(null)
   const [myDailyTracks, setMyDailyTracks] = useState<DailyTrack[]>([])
-
-  const {
-    searchTracks,
-    searchModalOpen,
-    search,
-    isSubmitted,
-    setSearch,
-    handleSubmit,
-    handleCloseSearch,
-    setSearchModalOpen,
-  } = useTrackSearch()
+  const [selectedEmotion, setSelectedEmotion] =
+    useState<DailyTrackEmotionOption | null>(null)
+  const [yearMonth, setYearMonth] = useState(getYearMonth())
+  const [myMonthlyTracks, setMyMonthlyTracks] = useState<DailyTrack[]>([])
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [todayUpdated, setTodayUpdated] = useState(false)
 
   const fetchTracks = useCallback(async () => {
     try {
@@ -35,26 +41,82 @@ export default function DailyTrackPage() {
         getTodayTrack(),
         getMyDailyTracks(),
       ])
-      console.log('ㅇㄴ: ', myDailyTracksData)
-      setTodayTrack(todayTrackData)
-      setMyDailyTracks(myDailyTracksData)
+      setTodayTrack(todayTrackData ?? null)
+      if (todayTrackData && todayTrackData.emotion !== 'NONE') {
+        setSelectedEmotion(
+          DAILY_TRACK_EMOTION_OPTIONS.find(
+            (e) => e.value === todayTrackData.emotion
+          ) ?? null
+        )
+      } else {
+        setSelectedEmotion(null)
+      }
+      setMyDailyTracks(myDailyTracksData ?? null)
     } catch (e) {
       console.error(e)
+      setTodayTrack(null)
+      setSelectedEmotion(null)
     }
   }, [])
 
+  const fetchMonthly = useCallback(async () => {
+    try {
+      const myMonthlyTracksData = await getMonthlyTracks(
+        yearMonth.year,
+        yearMonth.month
+      )
+      setMyMonthlyTracks(myMonthlyTracksData)
+    } catch (e) {
+      console.error(e)
+      setMyMonthlyTracks([])
+    }
+  }, [yearMonth])
+
   const handleSaveTodayTrack = async (dto: TrackCreateRequestDto) => {
     try {
+      const streak: DailyTrackStreak = await getCurrentStreak()
+      if (!todayUpdated && streak.currentStreak >= 2)
+        setToastMessage(`${streak.currentStreak}일 연속 기록했어요.`)
+      console.log('streak', streak.currentStreak)
       await saveTodayTrack(dto)
+      setTodayUpdated(true)
       await fetchTracks()
+      await fetchMonthly()
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  const handlePickEmotion = async (emotionValue: DailyTrackEmotion) => {
+    try {
+      await saveTodayEmotion(emotionValue)
+      setSelectedEmotion(
+        DAILY_TRACK_EMOTION_OPTIONS.find((e) => e.value === emotionValue) ??
+          null
+      )
+      await fetchMonthly()
+      await fetchTracks()
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response?.status === 404) {
+        setToastMessage('노래를 먼저 추가해주세요.')
+
+        setTimeout(() => {
+          setToastMessage(null)
+        }, 2500)
+
+        return
+      }
+      console.error(e)
     }
   }
 
   useEffect(() => {
     fetchTracks()
   }, [fetchTracks, currentDate])
+
+  useEffect(() => {
+    fetchMonthly()
+  }, [fetchMonthly])
 
   useEffect(() => {
     const checkDateChange = () => {
@@ -103,21 +165,21 @@ export default function DailyTrackPage() {
         todayTrackImageUrl={todayTrack?.imageUrl}
         todayTrackName={todayTrack?.name}
         todayTrackArtistName={todayTrack?.artist}
+        todayEmotion={selectedEmotion}
       />
-
-      <DailyTrackSearchPanel
-        searchTracks={searchTracks}
-        searchModalOpen={searchModalOpen}
-        search={search}
-        isSubmitted={isSubmitted}
-        setSearch={setSearch}
-        handleSubmit={handleSubmit}
-        handleCloseSearch={handleCloseSearch}
-        setSearchModalOpen={setSearchModalOpen}
+      <ActionSection
+        selectedEmotionValue={selectedEmotion?.value ?? null}
+        handlePickEmotion={handlePickEmotion}
         handleSaveTodayTrack={handleSaveTodayTrack}
       />
-
       <DailyTrackHistorySection tracks={myDailyTracks} />
+      <DailyTrackCalendarSection
+        monthlyTracks={myMonthlyTracks}
+        yearMonth={yearMonth}
+        setYearMonth={setYearMonth}
+      />
+
+      {toastMessage && <Toast message={toastMessage} />}
     </div>
   )
 }

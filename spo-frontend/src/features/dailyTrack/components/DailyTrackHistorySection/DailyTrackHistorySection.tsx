@@ -1,6 +1,7 @@
 import type { DailyTrack } from '../../../../types/dailyTrack'
 import styles from './DailyTrackHistorySection.module.css'
 import { formatDailyTrackDate } from '../../../../utils/date'
+import { DAILY_TRACK_EMOTION_OPTIONS } from '../../constants/dailyTrackEmotion'
 
 interface DailyTrackHistorySectionProps {
   tracks: DailyTrack[]
@@ -32,26 +33,44 @@ export default function DailyTrackHistorySection({
           </div>
         ) : (
           <div className={styles.list}>
-            {tracks.map((track) => (
-              <div key={track.id} className={styles.item}>
-                <div className={styles.date}>
-                  {formatDailyTrackDate(track.selectedDate)}
-                </div>
+            {tracks.map((track) => {
+              const emotionMeta =
+                track.emotion && track.emotion !== 'NONE'
+                  ? (DAILY_TRACK_EMOTION_OPTIONS.find(
+                      (e) => e.value === track.emotion
+                    ) ?? null)
+                  : null
+              return (
+                <div key={track.id} className={styles.item}>
+                  <div className={styles.date}>
+                    {formatDailyTrackDate(track.selectedDate)}
+                  </div>
 
-                <div className={styles.thumbnailWrap}>
-                  <img
-                    src={track.imageUrl}
-                    alt={track.name}
-                    className={styles.thumbnail}
-                  />
-                </div>
+                  <div className={styles.thumbnailWrap}>
+                    <img
+                      src={track.imageUrl}
+                      alt={track.name}
+                      className={styles.thumbnail}
+                    />
+                  </div>
 
-                <div className={styles.meta}>
-                  <div className={styles.name}>{track.name}</div>
-                  <div className={styles.artist}>{track.artist}</div>
+                  <div className={styles.meta}>
+                    <div className={styles.name}>{track.name}</div>
+                    <div className={styles.artist}>{track.artist}</div>
+                  </div>
+                  {emotionMeta && (
+                    <div className={styles.emotionBadge}>
+                      <span className={styles.emotionEmoji}>
+                        {emotionMeta.emoji}
+                      </span>
+                      <span className={styles.emotionLabel}>
+                        {emotionMeta.label}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

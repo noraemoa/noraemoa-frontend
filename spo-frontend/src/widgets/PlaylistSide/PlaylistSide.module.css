@@ -1,8 +1,9 @@
 .playlistSideContainer {
-    --sidebar-w: 360px;
     display: flex;
     flex-direction: column;
-    width: var(--sidebar-w);
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     height: 100%;
     background:
         linear-gradient(180deg, rgba(34, 35, 36, 0.98) 0%, rgba(31, 32, 33, 0.98) 100%);
@@ -11,25 +12,23 @@
     box-shadow:
         0 14px 28px rgba(0, 0, 0, 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.015);
-    transition: width 200ms ease;
-    overflow: visible;
+    overflow: hidden;
     color: #D8D9DA;
     position: relative;
     z-index: 100;
 }
 
-.playlistSideContainer[data-collapsed="true"] {
-    --sidebar-w: 76px;
-    overflow: visible;
-}
 
-.plsHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 14px 12px 12px;
-    border-bottom: 1px solid rgba(216, 217, 218, 0.04);
+.playlistListWrapper {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 6px 8px 10px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
 }
 
 .playlistSideContainer[data-collapsed="true"] .plsHeader {
@@ -38,6 +37,30 @@
     justify-content: flex-start;
     gap: 8px;
     padding: 12px 8px;
+}
+
+.playlistSideContainer[data-collapsed="true"] .optionWrapper {
+    display: none;
+}
+
+.playlistSideContainer[data-collapsed="true"] .sideToggleBtn,
+.playlistSideContainer[data-collapsed="true"] .createTrigger {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+    padding: 14px 12px 12px;
+    border-bottom: 1px solid rgba(216, 217, 218, 0.04);
 }
 
 .sideToggleBtn,
@@ -65,25 +88,13 @@
     transform: translateY(-1px);
 }
 
-.playlistSideContainer[data-collapsed="true"] .sideToggleBtn,
-.playlistSideContainer[data-collapsed="true"] .createTrigger {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+
 
 .optionWrapper {
     position: relative;
     flex: 1;
     min-width: 0;
     max-width: 220px;
-}
-
-.playlistSideContainer[data-collapsed="true"] .optionWrapper {
-    display: none;
 }
 
 .plsTitle {
@@ -163,8 +174,9 @@
 .playlistListWrapper {
     flex: 1;
     min-height: 0;
+    min-width: 0;
     overflow-y: auto;
-    overflow-x: visible;
+    overflow-x: hidden;
     padding: 6px 8px 10px;
     scrollbar-width: none;
     -ms-overflow-style: none;

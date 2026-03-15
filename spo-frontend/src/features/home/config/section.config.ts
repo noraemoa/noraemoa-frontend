@@ -1,20 +1,47 @@
+import type { YesterdayDailyTrack } from '../../../types/dailyTrack'
 import type { Playlist } from '../../../types/playlist'
 import type { SectionItem } from '../../../types/section'
+import { getYesterdayDailyTracks } from '../../dailyTrack/api/DailyTrackApi'
 import {
   getMyPlaylists,
   getPublicPlaylists,
 } from '../../playlists/api/PlaylistApi'
-
+type responseType = SectionItem | YesterdayDailyTrack
 export type SectionConfig = {
   id: number
   title: string
-  fetch: () => Promise<SectionItem[]>
+  description: string
+  kind: string
+  fetch: () => Promise<responseType[]>
 }
 
 export const sections: SectionConfig[] = [
   {
     id: 1,
+    title: '어제 사람들은 이런 곡을 들었어요',
+    description: '어제 다른 사람들의 하루를 채웠던 노래들이에요.',
+    kind: 'daily-track',
+    fetch: async (): Promise<YesterdayDailyTrack[]> => {
+      const res = await getYesterdayDailyTracks()
+      return res.map((i: YesterdayDailyTrack) => ({
+        id: i.id,
+        userId: i.userId,
+        username: i.username,
+        trackId: i.trackId,
+        spotifyId: i.spotifyId,
+        name: i.name,
+        artist: i.artist,
+        imageUrl: i.imageUrl,
+        selectedDate: i.selectedDate,
+        emotion: i.emotion,
+      }))
+    },
+  },
+  {
+    id: 2,
     title: '인기 플레이리스트',
+    description: '지금 많은 사람들이 좋아하는 플레이리스트예요.',
+    kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getPublicPlaylists(0, 10)
       return res.data.content.map((p: Playlist) => ({
@@ -26,8 +53,10 @@ export const sections: SectionConfig[] = [
     },
   },
   {
-    id: 2,
+    id: 3,
     title: '내 플레이리스트',
+    description: '내가 모아둔 플레이리스트를 다시 들어보세요.',
+    kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getMyPlaylists()
       return res.data.map((p: Playlist) => ({
@@ -39,21 +68,10 @@ export const sections: SectionConfig[] = [
     },
   },
   {
-    id: 3,
-    title: '인기 앨범 및 싱글',
-    fetch: async (): Promise<SectionItem[]> => {
-      const res = await getPublicPlaylists(0, 10)
-      return res.data.content.map((p: Playlist) => ({
-        id: p.id,
-        title: p.title,
-        creator: p.username,
-        thumbnailUrl: p.thumbnailUrl ?? null,
-      }))
-    },
-  },
-  {
     id: 4,
     title: '인기 아티스트',
+    description: '요즘 많은 사람들이 듣고 있는 아티스트들이에요.',
+    kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getPublicPlaylists(0, 10)
       return res.data.content.map((p: Playlist) => ({
@@ -67,6 +85,8 @@ export const sections: SectionConfig[] = [
   {
     id: 5,
     title: '수요일 오후는 어떠신가요',
+    description: '수요일 오후에 어울리는 플레이리스트를 준비했어요.',
+    kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getPublicPlaylists(0, 10)
       return res.data.content.map((p: Playlist) => ({
@@ -80,6 +100,8 @@ export const sections: SectionConfig[] = [
   {
     id: 6,
     title: '추천 차트',
+    description: '지금 추천하고 싶은 음악들을 소개합니다.',
+    kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getPublicPlaylists(0, 10)
       return res.data.content.map((p: Playlist) => ({

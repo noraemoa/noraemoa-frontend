@@ -18,17 +18,24 @@
 }
 
 .mainContainer {
+    --sidebar-w: clamp(260px, 24vw, 360px);
+
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
     grid-template-rows: var(--header-h) minmax(0, 1fr) var(--footer-h);
     grid-template-areas:
         "header header"
         "playlistSide homePage"
         "footerPlayer footerPlayer";
+
+    width: 100%;
+    max-width: 100%;
     height: 100vh;
-    gap: var(--shell-gap);
     padding: var(--shell-pad);
+    gap: var(--shell-gap);
     box-sizing: border-box;
+    overflow: hidden;
+
     background: var(--app-bg);
     color: var(--text-main);
 }
@@ -36,15 +43,8 @@
 .header {
     grid-area: header;
     min-height: 0;
+    min-width: 0;
     overflow: visible;
-    background: #272829;
-    border-radius: var(--panel-radius);
-}
-
-.footerPlayer {
-    grid-area: footerPlayer;
-    min-height: 0;
-    overflow: hidden;
     background: #272829;
     border-radius: var(--panel-radius);
 }
@@ -53,7 +53,8 @@
     grid-area: playlistSide;
     min-height: 0;
     min-width: 0;
-    overflow: visible;
+    max-width: 100%;
+    overflow: hidden;
     background: transparent;
     position: relative;
     z-index: 50;
@@ -63,7 +64,10 @@
     grid-area: homePage;
     min-height: 0;
     min-width: 0;
-    overflow: auto;
+    width: 100%;
+    max-width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: linear-gradient(180deg, #222324 0%, #1f2021 100%);
     border-radius: var(--panel-radius);
     scrollbar-width: none;
@@ -74,4 +78,33 @@
 
 .homePage::-webkit-scrollbar {
     display: none;
+}
+
+.footerPlayer {
+    grid-area: footerPlayer;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    background: #272829;
+    border-radius: var(--panel-radius);
+}
+
+.mainContainer[data-sidebar-collapsed="false"] {
+    --sidebar-w: clamp(260px, 24vw, 360px);
+}
+
+.mainContainer[data-sidebar-collapsed="true"] {
+    --sidebar-w: 76px;
+}
+
+@media (max-width: 1100px) {
+    .mainContainer {
+        --sidebar-w: clamp(220px, 26vw, 320px);
+    }
+}
+
+@media (max-width: 900px) {
+    .mainContainer {
+        --sidebar-w: clamp(200px, 28vw, 280px);
+    }
 }

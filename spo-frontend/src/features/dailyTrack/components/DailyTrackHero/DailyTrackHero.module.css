@@ -1,6 +1,6 @@
 .hero {
-    width: 100%;
     padding: 28px 28px 12px;
+    box-sizing: border-box;
 }
 
 .heroInner {
@@ -33,7 +33,6 @@
     align-items: center;
     height: 28px;
     padding: 0 12px;
-    margin-bottom: 14px;
     border-radius: 999px;
     background: rgba(255, 246, 224, 0.06);
     border: 1px solid rgba(255, 246, 224, 0.08);
@@ -148,14 +147,52 @@
     min-width: 0;
 }
 
+.metaRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.emotionBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(255, 246, 224, 0.05);
+    border: 1px solid rgba(255, 246, 224, 0.08);
+    color: #FFF6E0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.emotionEmoji {
+    font-size: 13px;
+    line-height: 1;
+}
+
+.emotionLabel {
+    line-height: 1;
+}
+
 @media (max-width: 900px) {
+    .hero {
+        padding: 24px 20px 12px;
+    }
+
     .heroInner {
         grid-template-columns: 1fr;
         gap: 24px;
+        padding: 28px;
     }
 
     .card {
+        width: 100%;
         max-width: 360px;
+        justify-self: start;
     }
 }
 
@@ -193,5 +230,15 @@
 
     .trackName {
         font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .heroInner {
+        padding: 20px;
+    }
+
+    .card {
+        padding: 14px;
     }
 }

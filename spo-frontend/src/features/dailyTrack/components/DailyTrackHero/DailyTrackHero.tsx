@@ -1,23 +1,38 @@
+import type { DailyTrackEmotionOption } from '../../../../types/dailyTrack'
 import { PLUS_THUMBNAIL } from '../../../../utils/image'
 import styles from './DailyTrackHero.module.css'
 
-interface DailyTrackHerolProps {
+interface DailyTrackHeroProps {
   today: string
   todayTrackImageUrl?: string
   todayTrackName?: string
   todayTrackArtistName?: string
+  todayEmotion: DailyTrackEmotionOption | null
 }
 export default function DailyTrackHero({
   today,
   todayTrackImageUrl,
   todayTrackName,
   todayTrackArtistName,
-}: DailyTrackHerolProps) {
+  todayEmotion,
+}: DailyTrackHeroProps) {
   return (
     <section className={styles.hero}>
       <div className={styles.heroInner}>
         <div className={styles.heroCopy}>
-          <div className={styles.label}>Daily Track</div>
+          <div className={styles.metaRow}>
+            <div className={styles.label}>Daily Track</div>
+            {todayEmotion && (
+              <div className={styles.emotionBadge}>
+                <span className={styles.emotionEmoji}>
+                  {todayEmotion?.emoji}
+                </span>
+                <span className={styles.emotionLabel}>
+                  {todayEmotion?.label}
+                </span>
+              </div>
+            )}
+          </div>
           <h1 className={styles.title}>오늘의 한 곡</h1>
           <div className={styles.date}>{today}</div>
           <p className={styles.description}>

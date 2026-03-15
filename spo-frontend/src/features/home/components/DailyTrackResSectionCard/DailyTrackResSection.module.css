@@ -1,0 +1,151 @@
+.card {
+    width: 176px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 14px;
+    padding: 12px;
+    background:
+        linear-gradient(180deg, rgba(44, 45, 47, 0.96) 0%, rgba(34, 35, 36, 0.96) 100%);
+    border: 1px solid rgba(216, 217, 218, 0.08);
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.015);
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+}
+
+.featuredCard {
+    width: 192px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 246, 224, 0.1);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.thumbnailWrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: #343841;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.thumbnailWrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+            rgba(0, 0, 0, 0) 45%,
+            rgba(0, 0, 0, 0.18) 100%);
+    pointer-events: none;
+}
+
+.thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #343841;
+    transform: scale(1);
+    transition: transform 0.22s ease;
+}
+
+.card:hover .thumbnail {
+    transform: scale(1.04);
+}
+
+.card:hover {
+    color: #FFF6E0;
+}
+
+
+.name {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #FFFFFF;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: color 0.12s ease;
+}
+
+.card:hover .name {
+    color: #FFF6E0;
+}
+
+.artist {
+    font-size: 12px;
+    color: rgba(216, 217, 218, 0.68);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.username {
+    margin-top: 6px;
+    font-size: 12px;
+    color: rgba(216, 217, 218, 0.58);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.emotionBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    width: fit-content;
+    max-width: 100%;
+
+    margin-top: 10px;
+    padding: 6px 10px;
+
+    border-radius: 999px;
+    background: rgba(255, 246, 224, 0.05);
+    border: 1px solid rgba(255, 246, 224, 0.08);
+
+    color: #FFF6E0;
+    box-sizing: border-box;
+}
+
+.emotionEmoji {
+    flex-shrink: 0;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.emotionLabel {
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
+
+    .featuredCard,
+    .card {
+        width: 164px;
+    }
+
+    .list,
+    .featuredList {
+        gap: 16px;
+    }
+}

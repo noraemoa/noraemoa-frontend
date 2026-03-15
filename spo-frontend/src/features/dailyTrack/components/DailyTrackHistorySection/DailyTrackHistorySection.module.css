@@ -1,6 +1,6 @@
 .section {
-    width: 100%;
     padding: 8px 28px 40px;
+    box-sizing: border-box;
 }
 
 .inner {
@@ -71,7 +71,7 @@
 
 .item {
     display: grid;
-    grid-template-columns: 116px 56px minmax(0, 1fr);
+    grid-template-columns: 116px 56px minmax(0, 1fr) auto;
     align-items: center;
     gap: 14px;
     min-width: 0;
@@ -82,6 +82,31 @@
         transform 0.15s ease,
         border-color 0.15s ease;
     border: 1px solid transparent;
+}
+
+.emotionBadge {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(255, 246, 224, 0.05);
+    border: 1px solid rgba(255, 246, 224, 0.08);
+    color: #FFF6E0;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.emotionEmoji {
+    font-size: 13px;
+    line-height: 1;
+}
+
+.emotionLabel {
+    line-height: 1;
 }
 
 .item:hover {
@@ -169,6 +194,10 @@
 }
 
 @media (max-width: 900px) {
+    .section {
+        padding: 8px 20px 36px;
+    }
+
     .header {
         align-items: flex-start;
         flex-direction: column;
@@ -176,6 +205,35 @@
 
     .count {
         align-self: flex-start;
+    }
+}
+
+@media (max-width: 768px) {
+    .item {
+        grid-template-columns: 96px 56px minmax(0, 1fr);
+        grid-template-areas:
+            "date thumb meta"
+            "badge badge badge";
+        align-items: center;
+        gap: 12px;
+    }
+
+    .date {
+        grid-area: date;
+    }
+
+    .thumbnailWrap {
+        grid-area: thumb;
+    }
+
+    .meta {
+        grid-area: meta;
+    }
+
+    .emotionBadge {
+        grid-area: badge;
+        justify-self: start;
+        margin-top: 2px;
     }
 }
 
@@ -196,6 +254,10 @@
         grid-template-columns: 1fr;
         gap: 10px;
         align-items: start;
+    }
+
+    .emotionBadge {
+        justify-self: start;
     }
 
     .thumbnailWrap {

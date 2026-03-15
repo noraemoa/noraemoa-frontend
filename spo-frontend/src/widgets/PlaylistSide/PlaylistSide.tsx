@@ -20,6 +20,8 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 export type PlaylistSideProps = {
   playlistVersion: number
   refreshPlaylists: () => void
+  sidebarCollapsed: boolean
+  setSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type Kind = 'playlist' | 'request'
@@ -33,10 +35,11 @@ const OPTIONS: { optionName: string; kind: Kind }[] = [
 export default function PlaylistSide({
   playlistVersion,
   refreshPlaylists,
+  sidebarCollapsed,
+  setSidebarCollapsed,
 }: PlaylistSideProps) {
   const [requests, setRequests] = useState<Request[]>([])
   const [playlists, setPlaylists] = useState<Playlist[]>([])
-  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const [optionOpen, setOptionOpen] = useState(false)
   const [selectedKind, setSelectedKind] = useState<Kind>('playlist')
@@ -84,7 +87,7 @@ export default function PlaylistSide({
     fetchLists()
   }, [selectedKind, fetchRequests, fetchPlaylists, playlistVersion])
 
-  const handleSidebar = () => setSidebarOpen((s) => !s)
+  const handleSidebar = () => setSidebarCollapsed((s) => !s)
   const closeModal = () => setActiveModal(null)
 
   const addApi =
@@ -104,7 +107,7 @@ export default function PlaylistSide({
   return (
     <>
       <div
-        data-collapsed={sidebarOpen ? 'false' : 'true'}
+        data-collapsed={sidebarCollapsed ? 'true' : 'false'}
         className={styles.playlistSideContainer}
       >
         <div className={styles.plsHeader}>
@@ -112,13 +115,13 @@ export default function PlaylistSide({
             type="button"
             className={styles.sideToggleBtn}
             onClick={handleSidebar}
-            aria-label={sidebarOpen ? '사이드바 접기' : '사이드바 열기'}
-            title={sidebarOpen ? '사이드바 접기' : '사이드바 열기'}
+            aria-label={sidebarCollapsed ? '사이드바 열기' : '사이드바 접기'}
+            title={sidebarCollapsed ? '사이드바 열기' : '사이드바 접기'}
           >
-            {sidebarOpen ? '사이드바' : '≡'}
+            {sidebarCollapsed ? '≡' : '사이드바'}
           </button>
 
-          {sidebarOpen && (
+          {!sidebarCollapsed && (
             <div className={styles.optionWrapper}>
               <div
                 className={styles.plsTitle}
@@ -152,7 +155,7 @@ export default function PlaylistSide({
           )}
 
           <MenuModal
-            triggerName={sidebarOpen ? '+ 만들기' : '+'}
+            triggerName={!sidebarCollapsed ? '+ 만들기' : '+'}
             className={styles.createTrigger}
           >
             <DropdownMenu.Content
@@ -201,13 +204,13 @@ export default function PlaylistSide({
           {selectedKind === 'playlist' ? (
             <MyPlaylistSide
               playlists={playlists}
-              sidebarOpen={sidebarOpen}
+              sidebarOpen={!sidebarCollapsed}
               playlistVersion={playlistVersion}
             />
           ) : (
             <RequestPlaylistSide
               requests={requests}
-              sidebarOpen={sidebarOpen}
+              sidebarOpen={!sidebarCollapsed}
               playlistVersion={playlistVersion}
             />
           )}

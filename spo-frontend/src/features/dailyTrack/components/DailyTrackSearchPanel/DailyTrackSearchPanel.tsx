@@ -26,69 +26,71 @@ export default function DailyTrackSearchPanel({
   handleSaveTodayTrack,
 }: DailyTrackSearchPanelProps) {
   return (
-    <div className={styles.bottom}>
-      {searchModalOpen ? (
-        <div className={styles.searchPanel}>
-          <div className={styles.searchPanelHeader}>
-            <div className={styles.searchPanelTitle}>검색창</div>
-            <button
-              type="button"
-              className={styles.searchCloseBtn}
-              onClick={handleCloseSearch}
-            >
-              ×
-            </button>
-          </div>
-          <form className={styles.searchForm} onSubmit={handleSubmit}>
-            <input
-              className={styles.searchInput}
-              type="text"
-              name="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="어떤 노래를 듣고 싶으세요?"
-              required
-            />
-            <button
-              type="submit"
-              disabled={isSubmitted}
-              style={{ display: 'none' }}
-            >
-              검색
-            </button>
-          </form>
-
-          <SearchItems onLikeBtn={true} tracks={searchTracks}>
-            {(track) => (
+    <section className={styles.section}>
+      <div className={styles.inner}>
+        {searchModalOpen ? (
+          <div className={styles.searchPanel}>
+            <div className={styles.searchPanelHeader}>
+              <div className={styles.searchPanelTitle}>검색창</div>
               <button
-                key={track.spotifyId}
                 type="button"
-                className={styles.dailyTrackAddBtn}
-                onClick={() =>
-                  handleSaveTodayTrack({
-                    spotifyId: track.spotifyId,
-                    name: track.name,
-                    artist: track.artistName,
-                    album: track.album,
-                    imageUrl: track.imageUrl,
-                    durationMs: track.durationMs,
-                  })
-                }
+                className={styles.searchCloseBtn}
+                onClick={handleCloseSearch}
               >
-                +
+                ×
               </button>
-            )}
-          </SearchItems>
-        </div>
-      ) : (
-        <button
-          type="button"
-          className={styles.searchOpenBtn}
-          onClick={() => setSearchModalOpen((s) => !s)}
-        >
-          오늘의 노래 찾아보기
-        </button>
-      )}
-    </div>
+            </div>
+            <form className={styles.searchForm} onSubmit={handleSubmit}>
+              <input
+                className={styles.searchInput}
+                type="text"
+                name="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="어떤 노래를 듣고 싶으세요?"
+                required
+              />
+              <button
+                type="submit"
+                disabled={isSubmitted}
+                style={{ display: 'none' }}
+              >
+                검색
+              </button>
+            </form>
+
+            <SearchItems onLikeBtn={true} tracks={searchTracks}>
+              {(track) => (
+                <button
+                  key={track.spotifyId}
+                  type="button"
+                  className={styles.dailyTrackAddBtn}
+                  onClick={() =>
+                    handleSaveTodayTrack({
+                      spotifyId: track.spotifyId,
+                      name: track.name,
+                      artist: track.artistName,
+                      album: track.album,
+                      imageUrl: track.imageUrl,
+                      durationMs: track.durationMs,
+                    })
+                  }
+                >
+                  +
+                </button>
+              )}
+            </SearchItems>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className={styles.searchOpenBtn}
+            onClick={() => setSearchModalOpen((s) => !s)}
+          >
+            오늘의 노래 찾아보기
+          </button>
+        )}
+      </div>
+    </section>
   )
 }
