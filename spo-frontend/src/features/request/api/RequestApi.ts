@@ -53,9 +53,9 @@ export async function getRequestTracks(requestId: number) {
 }
 
 //post
-export async function addRequest(title: string) {
+export async function addRequest(prompt: string) {
   try {
-    const data = { title }
+    const data = { prompt }
     const response = await api.post(`/requests`, data)
     return response
   } catch (error) {

@@ -1,4 +1,14 @@
 .page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 24px 32px 32px;
     color: #D8D9DA;
-    padding-bottom: 40px;
+}
+
+@media (max-width: 640px) {
+    .page {
+        padding: 20px 16px 24px;
+    }
 }

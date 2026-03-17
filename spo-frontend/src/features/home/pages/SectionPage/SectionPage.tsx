@@ -4,6 +4,7 @@ import type { SectionItem } from '../../../../types/section'
 import { sections } from '../../config/section.config'
 import styles from './SectionPage.module.css'
 import { DEFAULT_THUMBNAIL } from '../../../../utils/image'
+import type { YesterdayDailyTrack } from '../../../../types/dailyTrack'
 
 export default function SectionPage() {
   const { playlistVersion } = useOutletContext<{
@@ -29,7 +30,19 @@ export default function SectionPage() {
         setIsLoading(true)
         if (!section) return
         const res = await section.fetch()
-        setSectionItems(res)
+        if (section.kind === 'daily-track') {
+          const data = res as YesterdayDailyTrack[]
+          setSectionItems(
+            data.map((d) => ({
+              id: d.id,
+              creator: d.username,
+              thumbnailUrl: d.imageUrl,
+              title: d.name,
+            }))
+          )
+        } else {
+          setSectionItems(res as SectionItem[])
+        }
       } catch (error) {
         console.error(error)
         setSectionItems([])
@@ -82,20 +95,32 @@ export default function SectionPage() {
                 tabIndex={0}
               >
                 <div className={styles.thumbnailWrap}>
-                  <img
-                    src={
-                      item.thumbnailUrl
-                        ? `${import.meta.env.VITE_API_URL}${item.thumbnailUrl}?v=${playlistVersion}`
-                        : DEFAULT_THUMBNAIL
-                    }
-                    alt={item.title}
-                    className={styles.thumbnail}
-                  />
+                  {section?.kind === 'daily-track' ? (
+                    <img
+                      src={
+                        item.thumbnailUrl
+                          ? `${item.thumbnailUrl}`
+                          : DEFAULT_THUMBNAIL
+                      }
+                      alt={item.title}
+                      className={styles.thumbnail}
+                    />
+                  ) : (
+                    <img
+                      src={
+                        item.thumbnailUrl
+                          ? `${import.meta.env.VITE_API_URL}${item.thumbnailUrl}?v=${playlistVersion}`
+                          : DEFAULT_THUMBNAIL
+                      }
+                      alt={item.title}
+                      className={styles.thumbnail}
+                    />
+                  )}
                 </div>
 
                 <div className={styles.meta}>
                   <div className={styles.itemTitle}>{item.title}</div>
-                  <div className={styles.creator}>{item.creator}</div>
+                  <div className={styles.creator}>@{item.creator}</div>
                 </div>
               </div>
             ))}

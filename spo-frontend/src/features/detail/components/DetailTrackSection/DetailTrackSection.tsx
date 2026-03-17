@@ -7,7 +7,7 @@ import {
   type TrackMenuAction,
 } from '../../policies/trackMenuActions'
 import { useEffect, useState } from 'react'
-import LikeBtn from '../../../../shared/components/LikeBtn'
+import TrackLikeBtn from '../../../../shared/components/TrackLikeBtn'
 
 interface DetailTrackSectionProps {
   source: string | null
@@ -81,7 +81,7 @@ export default function DetailTrackSection({
                 </span>
               </div>
 
-              <LikeBtn
+              <TrackLikeBtn
                 isLike={track.track.liked}
                 trackDto={{
                   spotifyId: track.track.spotifyId,

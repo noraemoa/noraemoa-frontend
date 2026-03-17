@@ -111,8 +111,8 @@ export default function CommunityHome() {
 
                   <div className={styles.keywords}>
                     {request.keywords?.slice(0, 4).map((k) => (
-                      <span key={k.id} className={styles.keyword}>
-                        {k.rawText}
+                      <span key={k} className={styles.keyword}>
+                        {k}
                       </span>
                     ))}
                   </div>

@@ -19,6 +19,7 @@ export type Detail = {
   title: string
   thumbnailUrl: string | null
   visibility: Visibility
+  liked?: boolean
 }
 const isSource = (s: string | undefined): s is Source =>
   s === 'playlist' || s === 'request'
@@ -97,6 +98,7 @@ export default function PlaylistDetailPage() {
   return (
     <div className={styles.page}>
       <DetailHero
+        playlistId={validId}
         srcThumbnailUrl={srcThumbnailUrl}
         onEditClick={!isLoading && isOwner ? openModal : undefined}
         isOwner={isOwner}

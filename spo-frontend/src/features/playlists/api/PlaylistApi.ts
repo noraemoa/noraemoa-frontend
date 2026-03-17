@@ -23,6 +23,17 @@ export async function getPublicPlaylists(page: number, size: number) {
   }
 }
 
+export async function getAuthPublicPlaylists(page: number, size: number) {
+  try {
+    const params = { page, size }
+    const playlists = await api.get(`/public/playlists/me`, { params })
+    return playlists.data
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
 export async function getPlaylistDetails(playlistId: number) {
   try {
     const details = await api.get(`/playlists/${playlistId}`)
@@ -37,6 +48,16 @@ export async function getPlaylistTracks(playlistId: number) {
   try {
     const tracks = await api.get(`/playlists/${playlistId}/tracks`)
     return tracks
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
+export async function getLikedPlaylists() {
+  try {
+    const tracks = await api.get(`/users/me/liked-playlists`)
+    return tracks.data
   } catch (error) {
     console.error('Error: ' + error)
     throw error
@@ -77,6 +98,16 @@ export async function addTrackToPlaylist(
   }
 }
 
+export async function addPlaylistLike(playlistId: number) {
+  try {
+    const response = await api.post(`/playlists/${playlistId}/likes`)
+    return response.data
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
 // delete
 export async function deletePlaylist(playlistId: number) {
   try {
@@ -94,6 +125,16 @@ export async function deleteTrackByPlaylist(
 ) {
   try {
     const res = await api.delete(`/playlists/${playlistId}/tracks/${trackId}`)
+    console.log(res)
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
+export async function deletePlaylistLike(playlistId: number) {
+  try {
+    const res = await api.delete(`/playlists/${playlistId}/likes`)
     console.log(res)
   } catch (error) {
     console.error('Error: ' + error)

@@ -1,12 +1,13 @@
 import type { YesterdayDailyTrack } from '../../../types/dailyTrack'
-import type { Playlist } from '../../../types/playlist'
+import type { Playlist, PlaylistDetails } from '../../../types/playlist'
 import type { SectionItem } from '../../../types/section'
 import { getYesterdayDailyTracks } from '../../dailyTrack/api/DailyTrackApi'
 import {
+  getAuthPublicPlaylists,
   getMyPlaylists,
   getPublicPlaylists,
 } from '../../playlists/api/PlaylistApi'
-type responseType = SectionItem | YesterdayDailyTrack
+type responseType = SectionItem | YesterdayDailyTrack | PlaylistDetails
 export type SectionConfig = {
   id: number
   title: string
@@ -23,33 +24,42 @@ export const sections: SectionConfig[] = [
     kind: 'daily-track',
     fetch: async (): Promise<YesterdayDailyTrack[]> => {
       const res = await getYesterdayDailyTracks()
-      return res.map((i: YesterdayDailyTrack) => ({
-        id: i.id,
-        userId: i.userId,
-        username: i.username,
-        trackId: i.trackId,
-        spotifyId: i.spotifyId,
-        name: i.name,
-        artist: i.artist,
-        imageUrl: i.imageUrl,
-        selectedDate: i.selectedDate,
-        emotion: i.emotion,
-      }))
+      return res
+        .map((i: YesterdayDailyTrack) => ({
+          id: i.id,
+          userId: i.userId,
+          username: i.username,
+          trackId: i.trackId,
+          spotifyId: i.spotifyId,
+          name: i.name,
+          artist: i.artist,
+          imageUrl: i.imageUrl,
+          selectedDate: i.selectedDate,
+          emotion: i.emotion,
+        }))
+        .slice(0, 10)
     },
   },
   {
     id: 2,
     title: '인기 플레이리스트',
     description: '지금 많은 사람들이 좋아하는 플레이리스트예요.',
-    kind: 'playlist',
-    fetch: async (): Promise<SectionItem[]> => {
-      const res = await getPublicPlaylists(0, 10)
-      return res.data.content.map((p: Playlist) => ({
-        id: p.id,
-        title: p.title,
-        creator: p.username,
-        thumbnailUrl: p.thumbnailUrl ?? null,
-      }))
+    kind: 'auth-public-playlist',
+    fetch: async (): Promise<PlaylistDetails[]> => {
+      const res = await getAuthPublicPlaylists(0, 10)
+      console.log('auth', res)
+      return res
+        .map((p: PlaylistDetails) => ({
+          id: p.id,
+          userId: p.userId,
+          username: p.username,
+          code: p.code,
+          title: p.title,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+          visibility: p.visibility,
+          liked: p.liked,
+        }))
+        .slice(0, 10)
     },
   },
   {
@@ -59,12 +69,14 @@ export const sections: SectionConfig[] = [
     kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getMyPlaylists()
-      return res.data.map((p: Playlist) => ({
-        id: p.id,
-        title: p.title,
-        creator: p.username,
-        thumbnailUrl: p.thumbnailUrl ?? null,
-      }))
+      return res.data
+        .map((p: Playlist) => ({
+          id: p.id,
+          title: p.title,
+          creator: p.username,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+        }))
+        .slice(0, 10)
     },
   },
   {
@@ -74,12 +86,14 @@ export const sections: SectionConfig[] = [
     kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getPublicPlaylists(0, 10)
-      return res.data.content.map((p: Playlist) => ({
-        id: p.id,
-        title: p.title,
-        creator: p.username,
-        thumbnailUrl: p.thumbnailUrl ?? null,
-      }))
+      return res.data.content
+        .map((p: Playlist) => ({
+          id: p.id,
+          title: p.title,
+          creator: p.username,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+        }))
+        .slice(0, 10)
     },
   },
   {
@@ -89,12 +103,14 @@ export const sections: SectionConfig[] = [
     kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getPublicPlaylists(0, 10)
-      return res.data.content.map((p: Playlist) => ({
-        id: p.id,
-        title: p.title,
-        creator: p.username,
-        thumbnailUrl: p.thumbnailUrl ?? null,
-      }))
+      return res.data.content
+        .map((p: Playlist) => ({
+          id: p.id,
+          title: p.title,
+          creator: p.username,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+        }))
+        .slice(0, 10)
     },
   },
   {
@@ -104,12 +120,68 @@ export const sections: SectionConfig[] = [
     kind: 'playlist',
     fetch: async (): Promise<SectionItem[]> => {
       const res = await getPublicPlaylists(0, 10)
-      return res.data.content.map((p: Playlist) => ({
-        id: p.id,
-        title: p.title,
-        creator: p.username,
-        thumbnailUrl: p.thumbnailUrl ?? null,
-      }))
+      return res.data.content
+        .map((p: Playlist) => ({
+          id: p.id,
+          title: p.title,
+          creator: p.username,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+        }))
+        .slice(0, 10)
+    },
+  },
+]
+
+export const guestSections: SectionConfig[] = [
+  {
+    id: 1,
+    title: '인기 아티스트',
+    description: '요즘 많은 사람들이 듣고 있는 아티스트들이에요.',
+    kind: 'playlist',
+    fetch: async (): Promise<SectionItem[]> => {
+      const res = await getPublicPlaylists(0, 10)
+      return res.data.content
+        .map((p: Playlist) => ({
+          id: p.id,
+          title: p.title,
+          creator: p.username,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+        }))
+        .slice(0, 10)
+    },
+  },
+  {
+    id: 2,
+    title: '수요일 오후는 어떠신가요',
+    description: '수요일 오후에 어울리는 플레이리스트를 준비했어요.',
+    kind: 'playlist',
+    fetch: async (): Promise<SectionItem[]> => {
+      const res = await getPublicPlaylists(0, 10)
+      return res.data.content
+        .map((p: Playlist) => ({
+          id: p.id,
+          title: p.title,
+          creator: p.username,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+        }))
+        .slice(0, 10)
+    },
+  },
+  {
+    id: 3,
+    title: '추천 차트',
+    description: '지금 추천하고 싶은 음악들을 소개합니다.',
+    kind: 'playlist',
+    fetch: async (): Promise<SectionItem[]> => {
+      const res = await getPublicPlaylists(0, 10)
+      return res.data.content
+        .map((p: Playlist) => ({
+          id: p.id,
+          title: p.title,
+          creator: p.username,
+          thumbnailUrl: p.thumbnailUrl ?? null,
+        }))
+        .slice(0, 10)
     },
   },
 ]

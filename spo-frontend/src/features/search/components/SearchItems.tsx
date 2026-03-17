@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import styles from './SearchItems.module.css'
 import type { SpotifyTrack, Track } from '../../../types/track'
-import LikeBtn from '../../../shared/components/LikeBtn'
+import TrackLikeBtn from '../../../shared/components/TrackLikeBtn'
 
 export default function SearchItems({
   onLikeBtn,
@@ -56,7 +56,7 @@ export default function SearchItems({
           </div>
           <div className={styles.trackActions}>
             {onLikeBtn ? (
-              <LikeBtn
+              <TrackLikeBtn
                 isLike={i.track.liked}
                 trackDto={{
                   spotifyId: i.track.spotifyId,

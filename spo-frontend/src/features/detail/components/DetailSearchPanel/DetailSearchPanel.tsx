@@ -1,7 +1,7 @@
 import type { SpotifyTrack, Track } from '../../../../types/track'
 import SearchItems from '../../../search/components/SearchItems'
 import styles from '../../../../shared/styles/SearchPanel.module.css'
-
+import panelStyles from './DetailSearchPanel.module.css'
 interface DetailSearchPanelProps {
   id: number | null
   searchTracks: Track | null
@@ -28,54 +28,56 @@ export default function DetailSearchPanel({
   addTrack,
 }: DetailSearchPanelProps) {
   return (
-    <div className={styles.bottom}>
-      {searchModalOpen ? (
-        <div className={styles.searchPanel}>
-          <div className={styles.searchPanelHeader}>
-            <div className={styles.searchPanelTitle}>곡 검색</div>
-            <button
-              type="button"
-              className={styles.searchCloseBtn}
-              onClick={handleCloseSearch}
-            >
-              ×
-            </button>
-          </div>
-          <form className={styles.searchForm} onSubmit={handleSubmit}>
-            <input
-              className={styles.searchInput}
-              type="text"
-              name="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="어떤 노래를 듣고 싶으세요?"
-              required
-            />
-            <button
-              type="submit"
-              disabled={isSubmitted}
-              style={{ display: 'none' }}
-            >
-              검색
-            </button>
-          </form>
+    <div className={panelStyles.wrap}>
+      <div className={styles.bottom}>
+        {searchModalOpen ? (
+          <div className={styles.searchPanel}>
+            <div className={styles.searchPanelHeader}>
+              <div className={styles.searchPanelTitle}>곡 검색</div>
+              <button
+                type="button"
+                className={styles.searchCloseBtn}
+                onClick={handleCloseSearch}
+              >
+                ×
+              </button>
+            </div>
+            <form className={styles.searchForm} onSubmit={handleSubmit}>
+              <input
+                className={styles.searchInput}
+                type="text"
+                name="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="어떤 노래를 듣고 싶으세요?"
+                required
+              />
+              <button
+                type="submit"
+                disabled={isSubmitted}
+                style={{ display: 'none' }}
+              >
+                검색
+              </button>
+            </form>
 
-          <SearchItems
-            id={id}
-            onLikeBtn={false}
-            tracks={searchTracks}
-            addTrack={addTrack}
-          ></SearchItems>
-        </div>
-      ) : (
-        <button
-          type="button"
-          className={styles.searchOpenBtn}
-          onClick={() => setSearchModalOpen((s) => !s)}
-        >
-          더 찾아보기
-        </button>
-      )}
+            <SearchItems
+              id={id}
+              onLikeBtn={false}
+              tracks={searchTracks}
+              addTrack={addTrack}
+            ></SearchItems>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className={styles.searchOpenBtn}
+            onClick={() => setSearchModalOpen((s) => !s)}
+          >
+            더 찾아보기
+          </button>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import type { Detail } from '../../../page/PlaylistDetailPage'
-import type { Playlist } from '../../../types/playlist'
+import type { PlaylistDetails } from '../../../types/playlist'
 import type { RequestDetail } from '../../../types/request'
 import type { MyTrack } from '../../../types/search'
 import type { SpotifyTrack, Track } from '../../../types/track'
@@ -83,13 +83,14 @@ export function createDetailSourceAdapter(source: string): DetailSourceAdapter {
   }
   return {
     async getDetail(id) {
-      const res = (await getPlaylistDetails(id)).data as Playlist
+      const res = (await getPlaylistDetails(id)).data as PlaylistDetails
       return {
         userId: res.userId,
         username: res.username,
         title: res.title,
         thumbnailUrl: res.thumbnailUrl ?? null,
         visibility: res.visibility,
+        liked: res.liked,
       }
     },
     async getTracks(id) {

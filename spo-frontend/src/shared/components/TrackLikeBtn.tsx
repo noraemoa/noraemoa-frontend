@@ -11,7 +11,7 @@ interface LikeBtnProps {
   handleSetLocalTracks: (liked: boolean, spotifyId: string) => void
   className?: string
 }
-export default function LikeBtn({
+export default function TrackLikeBtn({
   isLike,
   trackDto,
   handleSetLocalTracks,

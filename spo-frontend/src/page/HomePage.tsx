@@ -6,7 +6,7 @@ import PageTabs from '../shared/components/PageTabs'
 import MainHero from '../features/home/components/MainHero/MainHero'
 
 const authOnlySections = [1, 2, 3, 4, 5]
-const guestOnlySections = [1, 6, 3, 4]
+const guestOnlySections = [1, 2, 3]
 
 export default function HomePage() {
   const { playlistVersion } = useOutletContext<{
@@ -29,6 +29,7 @@ export default function HomePage() {
               sectionId={section}
               playlistVersion={playlistVersion}
               featured={index === 0}
+              auth={true}
             />
           ))}
         </AuthOnly>
@@ -40,6 +41,7 @@ export default function HomePage() {
               sectionId={section}
               playlistVersion={playlistVersion}
               featured={index === 0}
+              auth={false}
             />
           ))}
         </GuestOnly>

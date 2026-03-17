@@ -28,3 +28,12 @@ export interface TrackCreateRequestDto {
   imageUrl?: string
   durationMs: number
 }
+
+export interface LikedTrackItem {
+  trackId: number
+  name: string
+  artist: string
+  album: string
+  imageUrl: string
+  createdAt: string
+}

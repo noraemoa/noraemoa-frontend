@@ -2,23 +2,26 @@ import { useNavigate } from 'react-router-dom'
 import styles from './SectionCard.module.css'
 import type { SectionItem } from '../../../../types/section'
 import { useEffect, useState } from 'react'
-import { sections } from '../../config/section.config'
+import { guestSections, sections } from '../../config/section.config'
 import type { YesterdayDailyTrack } from '../../../../types/dailyTrack'
 import PlaylistResSectionCard from '../PlaylistResSectionCard/PlaylistResSectionCard'
 import DailyTrackResSectionCard from '../DailyTrackResSectionCard/DailyTrackResSectionCard'
+import type { PlaylistDetails } from '../../../../types/playlist'
 
 interface SectionCardProps {
   sectionId: number
   playlistVersion: number
   featured?: boolean
+  auth: boolean
 }
 
-type responseType = SectionItem | YesterdayDailyTrack
+type responseType = SectionItem | YesterdayDailyTrack | PlaylistDetails
 
 export default function SectionCard({
   sectionId,
   playlistVersion,
   featured = false,
+  auth,
 }: SectionCardProps) {
   const sectionIdx = sectionId - 1
   const [items, setItems] = useState<responseType[]>([])
@@ -31,12 +34,12 @@ export default function SectionCard({
   const handlePlaylist = (playlistId: number) => {
     navigate(`/detail/playlist/${playlistId}`)
   }
-  const section = sections.at(sectionIdx)
+  const section = auth ? sections.at(sectionIdx) : guestSections.at(sectionIdx)
   useEffect(() => {
     const fetchData = async () => {
       if (!section) return
       const res = await section.fetch()
-      setItems(res.slice(0, 10))
+      setItems(res)
     }
     fetchData()
   }, [section])

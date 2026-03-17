@@ -77,7 +77,7 @@ export default function DailyTrackPage() {
       const streak: DailyTrackStreak = await getCurrentStreak()
       if (!todayUpdated && streak.currentStreak >= 2)
         setToastMessage(`${streak.currentStreak}일 연속 기록했어요.`)
-      console.log('streak', streak.currentStreak)
+
       await saveTodayTrack(dto)
       setTodayUpdated(true)
       await fetchTracks()

@@ -19,7 +19,7 @@ export interface RequestFeedItem {
   username?: string
   title: string
   thumbnailUrl?: string
-  keywords?: Keyword[]
+  keywords?: string[]
   trackCount: number
   createdAt: string
 }

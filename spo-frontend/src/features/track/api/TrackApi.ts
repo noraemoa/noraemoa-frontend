@@ -13,6 +13,17 @@ export async function searchTrack(query: string) {
   }
 }
 
+export async function getLikedTracks() {
+  try {
+    const response = await api.get(`/users/me/liked-tracks`)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
 export async function addTrackLike(dto: TrackCreateRequestDto) {
   try {
     const res = await api.post('/tracks/likes', dto)
