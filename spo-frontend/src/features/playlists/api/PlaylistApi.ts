@@ -56,8 +56,19 @@ export async function getPlaylistTracks(playlistId: number) {
 
 export async function getLikedPlaylists() {
   try {
-    const tracks = await api.get(`/users/me/liked-playlists`)
-    return tracks.data
+    const playlists = await api.get(`/users/me/liked-playlists`)
+    return playlists.data
+  } catch (error) {
+    console.error('Error: ' + error)
+    throw error
+  }
+}
+
+export async function getPopularPlaylists(page: number, size: number) {
+  try {
+    const params = { page, size }
+    const playlists = await api.get(`/playlists/popular`, { params })
+    return playlists.data
   } catch (error) {
     console.error('Error: ' + error)
     throw error

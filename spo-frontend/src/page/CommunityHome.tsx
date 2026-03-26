@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { RequestFeedItem } from '../types/request'
-import { getAllRequests } from '../features/request/api/RequestApi'
+import { addRequest, getAllRequests } from '../features/request/api/RequestApi'
 import { DEFAULT_REQUEST_THUMBNAIL } from '../utils/image'
 import styles from '../features/community/components/CommunityHome/CommunityHome.module.css'
 import { useNavigate, useOutletContext } from 'react-router-dom'
@@ -16,6 +16,9 @@ export default function CommunityHome() {
   const [requests, setRequests] = useState<RequestFeedItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
+  const [requestModalOpen, setRequestModalOpen] = useState(false)
+  const [requestPrompt, setRequestPrompt] = useState('')
+  const [isSubmitted, setSubmit] = useState(false)
 
   const fetchData = async () => {
     try {
@@ -45,6 +48,28 @@ export default function CommunityHome() {
     navigate(`/detail/request/${id}`)
   }
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (isSubmitted) return
+
+    try {
+      setSubmit(true)
+      const res = await addRequest(requestPrompt)
+      setRequestPrompt('')
+      setRequestModalOpen(false)
+      navigate(`/detail/request/${res.id}`)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSubmit(false)
+    }
+  }
+
+  const handleCloseAddRequest = () => {
+    setRequestModalOpen(false)
+    setRequestPrompt('')
+  }
+
   useEffect(() => {
     fetchData()
   }, [])
@@ -66,6 +91,49 @@ export default function CommunityHome() {
       <PageTabs />
 
       <section className={styles.feedSection}>
+        {requestModalOpen ? (
+          <div className={styles.addRequestPanel}>
+            <div className={styles.addRequestPanelHeader}>
+              <div className={styles.addRequestPanelTitle}>
+                어떤 플레이리스트를 찾고 있나요?
+              </div>
+              <button
+                type="button"
+                className={styles.addRequestCloseBtn}
+                onClick={handleCloseAddRequest}
+              >
+                ×
+              </button>
+            </div>
+            <form className={styles.addRequestForm} onSubmit={handleSubmit}>
+              <input
+                className={styles.addRequestInput}
+                type="text"
+                name="text"
+                value={requestPrompt}
+                onChange={(e) => setRequestPrompt(e.target.value)}
+                placeholder="예: 비 오는 날 밤에 듣기 좋은 잔잔한 플리 추천해주세요"
+                required
+              />
+              <button
+                type="submit"
+                disabled={isSubmitted}
+                style={{ display: 'none' }}
+              >
+                추가
+              </button>
+            </form>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className={styles.addRequestOpenBtn}
+            onClick={() => setRequestModalOpen((s) => !s)}
+          >
+            플리 요청하기
+          </button>
+        )}
+
         <div className={styles.feedHeader}>
           <div className={styles.feedHeaderText}>
             <h2 className={styles.feedTitle}>최근 요청</h2>

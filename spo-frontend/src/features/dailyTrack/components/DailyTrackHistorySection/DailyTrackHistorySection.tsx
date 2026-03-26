@@ -15,20 +15,18 @@ export default function DailyTrackHistorySection({
       <div className={styles.inner}>
         <div className={styles.header}>
           <div className={styles.headerText}>
-            <h2 className={styles.title}>나의 기록</h2>
+            <h2 className={styles.title}>최근 기록</h2>
             <p className={styles.description}>
-              하루를 대표했던 노래들을 차곡차곡 모아보세요.
+              최근에 선택한 노래들을 한눈에 확인해보세요.
             </p>
           </div>
-
-          <div className={styles.count}>{tracks.length} tracks</div>
         </div>
 
         {tracks.length === 0 ? (
           <div className={styles.empty}>
             <div className={styles.emptyTitle}>아직 쌓인 기록이 없어요</div>
             <div className={styles.emptyDescription}>
-              오늘의 한 곡을 남기면 이곳에 하루의 기록이 쌓여요.
+              오늘의 한 곡을 남기면 여기에 최근 기록이 표시돼요.
             </div>
           </div>
         ) : (

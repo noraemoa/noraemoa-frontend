@@ -7,8 +7,20 @@
     color: #D8D9DA;
 }
 
+.tabsWrap {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 18px;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
 @media (max-width: 640px) {
     .page {
         padding: 20px 16px 24px;
+    }
+
+    .tabsWrap {
+        margin: 0 auto 14px;
     }
 }

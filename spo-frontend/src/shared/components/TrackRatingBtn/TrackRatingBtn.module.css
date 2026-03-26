@@ -1,0 +1,90 @@
+.rating {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+.collapsed {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.84;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.singleStar {
+    font-size: 16px;
+    line-height: 1;
+    color: #F4D978;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.singleStarFilled {
+    color: #F4D978;
+}
+
+.expanded {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    border-radius: 999px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 20;
+}
+
+.starButton {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 15px;
+    line-height: 1;
+    color: #FFFFFF;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.filled {
+    color: #F4D978;
+}
+
+.starButton:hover .star {
+    transform: scale(1.06);
+    color: #FFF6E0;
+}
+
+.starButton1:hover .star,
+.starButton2:hover .star,
+.starButton3:hover .star,
+.starButton4:hover .star,
+.starButton5:hover .star {
+    color: #F4D978;
+}
+
+.starButton2:hover~.starButton .star,
+.starButton3:hover~.starButton .star,
+.starButton4:hover~.starButton .star,
+.starButton5:hover~.starButton .star {
+    color: #FFFFFF;
+}

@@ -57,7 +57,7 @@ export async function addRequest(prompt: string) {
   try {
     const data = { prompt }
     const response = await api.post(`/requests`, data)
-    return response
+    return response.data
   } catch (error) {
     console.error('Error: ' + error)
     throw error

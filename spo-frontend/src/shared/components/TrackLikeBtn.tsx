@@ -35,7 +35,7 @@ export default function TrackLikeBtn({
       className={`${styles.triggerBtn} ${className ?? ''}`}
       onClick={() => toggleLike(isLike, trackDto)}
     >
-      <IoHeart color={isLike ? 'red' : 'white'} size={20} />
+      <IoHeart color={isLike ? 'red' : 'white'} size={22} />
     </button>
   )
 }

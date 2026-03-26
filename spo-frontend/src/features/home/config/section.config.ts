@@ -1,13 +1,21 @@
 import type { YesterdayDailyTrack } from '../../../types/dailyTrack'
-import type { Playlist, PlaylistDetails } from '../../../types/playlist'
+import type {
+  Playlist,
+  PlaylistDetails,
+  PopularPlaylist,
+} from '../../../types/playlist'
 import type { SectionItem } from '../../../types/section'
 import { getYesterdayDailyTracks } from '../../dailyTrack/api/DailyTrackApi'
 import {
-  getAuthPublicPlaylists,
   getMyPlaylists,
+  getPopularPlaylists,
   getPublicPlaylists,
 } from '../../playlists/api/PlaylistApi'
-type responseType = SectionItem | YesterdayDailyTrack | PlaylistDetails
+type responseType =
+  | SectionItem
+  | YesterdayDailyTrack
+  | PlaylistDetails
+  | PopularPlaylist
 export type SectionConfig = {
   id: number
   title: string
@@ -45,19 +53,14 @@ export const sections: SectionConfig[] = [
     title: '인기 플레이리스트',
     description: '지금 많은 사람들이 좋아하는 플레이리스트예요.',
     kind: 'auth-public-playlist',
-    fetch: async (): Promise<PlaylistDetails[]> => {
-      const res = await getAuthPublicPlaylists(0, 10)
-      console.log('auth', res)
+    fetch: async (): Promise<PopularPlaylist[]> => {
+      const res = await getPopularPlaylists(0, 10)
       return res
-        .map((p: PlaylistDetails) => ({
+        .map((p: PopularPlaylist) => ({
           id: p.id,
-          userId: p.userId,
-          username: p.username,
-          code: p.code,
           title: p.title,
+          creator: p.username,
           thumbnailUrl: p.thumbnailUrl ?? null,
-          visibility: p.visibility,
-          liked: p.liked,
         }))
         .slice(0, 10)
     },
@@ -84,10 +87,10 @@ export const sections: SectionConfig[] = [
     title: '인기 아티스트',
     description: '요즘 많은 사람들이 듣고 있는 아티스트들이에요.',
     kind: 'playlist',
-    fetch: async (): Promise<SectionItem[]> => {
-      const res = await getPublicPlaylists(0, 10)
-      return res.data.content
-        .map((p: Playlist) => ({
+    fetch: async (): Promise<PopularPlaylist[]> => {
+      const res = await getPopularPlaylists(0, 10)
+      return res
+        .map((p: PopularPlaylist) => ({
           id: p.id,
           title: p.title,
           creator: p.username,

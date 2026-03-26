@@ -67,7 +67,7 @@
 
 .trackHeader {
     display: grid;
-    grid-template-columns: 44px 1fr 220px 80px 35px 24px;
+    grid-template-columns: 44px minmax(0, 1fr) 220px 72px 40px 40px 28px;
     gap: 12px;
     padding: 8px 12px 12px;
     border-bottom: 1px solid rgba(216, 217, 218, 0.08);
@@ -75,15 +75,9 @@
     color: rgba(216, 217, 218, 0.56);
 }
 
-.trackList {
-    display: flex;
-    flex-direction: column;
-    padding-top: 6px;
-}
-
 .trackRow {
     display: grid;
-    grid-template-columns: 44px 1fr 220px 80px 35px 24px;
+    grid-template-columns: 44px minmax(0, 1fr) 220px 72px 40px 40px 28px;
     gap: 12px;
     align-items: center;
     padding: 13px 12px;
@@ -94,6 +88,12 @@
         background 0.15s ease,
         transform 0.15s ease,
         border-color 0.15s ease;
+}
+
+.trackList {
+    display: flex;
+    flex-direction: column;
+    padding-top: 6px;
 }
 
 .trackRow:hover {
@@ -144,6 +144,20 @@
     white-space: nowrap;
 }
 
+.colRating {
+    width: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ratingBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .colRight {
     display: flex;
     align-items: center;
@@ -152,15 +166,23 @@
     white-space: nowrap;
 }
 
-.colMore {
-    display: flex;
+.trackRow:hover .colRight {
+    opacity: 0;
+    pointer-events: none;
 }
 
-.duration {
-    min-width: 40px;
-    text-align: center;
-    color: rgba(216, 217, 218, 0.76);
-    font-size: 13px;
+
+
+.colMore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.colRight,
+.colRating {
+    grid-column: 4;
+    grid-row: 1;
 }
 
 .moreButton {
@@ -170,9 +192,11 @@
     cursor: pointer;
     font-size: 15px;
     line-height: 1;
+    width: 24px;
+    height: 24px;
     padding: 0;
     color: rgba(216, 217, 218, 0.72);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     transition:
@@ -181,8 +205,48 @@
         transform 0.15s ease;
 }
 
+.duration {
+    min-width: 40px;
+    text-align: center;
+    color: rgba(216, 217, 218, 0.76);
+    font-size: 13px;
+}
+
+
 .trackRow:hover .moreButton {
     opacity: 1;
+}
+
+.trackRow:hover :global(.collapsed) {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.trackRow:hover :global(.expanded) {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.trackRow [data-rating-collapsed] {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.15s ease;
+}
+
+.trackRow [data-rating-expanded] {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.trackRow:hover [data-rating-collapsed] {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.trackRow:hover [data-rating-expanded] {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .moreButton:hover {
@@ -190,14 +254,24 @@
     transform: scale(1.05);
 }
 
-.likeBtn {
-    background: none;
-    border: 0;
-    cursor: pointer;
+.colLike {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.82;
+}
+
+.likeBtn {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.9;
     transition:
         transform 0.15s ease,
         opacity 0.15s ease;
@@ -205,7 +279,7 @@
 
 .likeBtn:hover {
     opacity: 1;
-    transform: scale(1.12);
+    transform: scale(1.08);
 }
 
 @media (max-width: 900px) {

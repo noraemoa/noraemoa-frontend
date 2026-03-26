@@ -51,7 +51,7 @@ export default function DailyTrackPage() {
       } else {
         setSelectedEmotion(null)
       }
-      setMyDailyTracks(myDailyTracksData ?? null)
+      setMyDailyTracks(myDailyTracksData.slice(0, 7) ?? null)
     } catch (e) {
       console.error(e)
       setTodayTrack(null)

@@ -8,6 +8,7 @@ import {
 } from '../../policies/trackMenuActions'
 import { useEffect, useState } from 'react'
 import TrackLikeBtn from '../../../../shared/components/TrackLikeBtn'
+import TrackRatingBtn from '../../../../shared/components/TrackRatingBtn/TrackRatingBtn'
 
 interface DetailTrackSectionProps {
   source: string | null
@@ -23,6 +24,7 @@ export default function DetailTrackSection({
   deleteTrack,
 }: DetailTrackSectionProps) {
   const [localTracks, setLocalTracks] = useState<Track | null>(tracks)
+  const [trackRate, setTrackRate] = useState(0)
   useEffect(() => {
     setLocalTracks(tracks)
   }, [tracks])
@@ -44,6 +46,11 @@ export default function DetailTrackSection({
     })
   }
 
+  const handleRateTrack = (spotifyId: string, value: number) => {
+    setTrackRate(value)
+    console.log('rate track', spotifyId, value)
+  }
+
   return (
     <div className={styles.body}>
       <div className={styles.trackHeader}>
@@ -51,6 +58,7 @@ export default function DetailTrackSection({
         <div className={styles.colTitle}>제목</div>
         <div className={styles.colMeta}>아티스트</div>
         <div className={styles.colRight}>길이</div>
+        <div className={styles.colRating}></div>
         <div className={styles.colLike}></div>
         <div className={styles.colMore}></div>
       </div>
@@ -79,6 +87,16 @@ export default function DetailTrackSection({
                     .toString()
                     .padStart(2, '0')}
                 </span>
+              </div>
+
+              <div>
+                <TrackRatingBtn
+                  rating={trackRate ?? 0}
+                  onRate={(value) =>
+                    handleRateTrack(track.track.spotifyId ?? '', value)
+                  }
+                  className={styles.ratingBtn}
+                />
               </div>
 
               <TrackLikeBtn

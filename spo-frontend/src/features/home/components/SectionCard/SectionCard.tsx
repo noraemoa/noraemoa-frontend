@@ -6,7 +6,10 @@ import { guestSections, sections } from '../../config/section.config'
 import type { YesterdayDailyTrack } from '../../../../types/dailyTrack'
 import PlaylistResSectionCard from '../PlaylistResSectionCard/PlaylistResSectionCard'
 import DailyTrackResSectionCard from '../DailyTrackResSectionCard/DailyTrackResSectionCard'
-import type { PlaylistDetails } from '../../../../types/playlist'
+import type {
+  PlaylistDetails,
+  PopularPlaylist,
+} from '../../../../types/playlist'
 
 interface SectionCardProps {
   sectionId: number
@@ -15,7 +18,11 @@ interface SectionCardProps {
   auth: boolean
 }
 
-type responseType = SectionItem | YesterdayDailyTrack | PlaylistDetails
+type responseType =
+  | SectionItem
+  | YesterdayDailyTrack
+  | PlaylistDetails
+  | PopularPlaylist
 
 export default function SectionCard({
   sectionId,

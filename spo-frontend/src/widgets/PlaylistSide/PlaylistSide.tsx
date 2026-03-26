@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import styles from './PlaylistSide.module.css'
 import { useNavigate } from 'react-router-dom'
-import {
-  addRequest,
-  getMyRequests,
-} from '../../features/request/api/RequestApi'
-import PlaylistNRequestCreateModal from '../../shared/modals/PlaylistNRequestCreateModal'
+import { getMyRequests } from '../../features/request/api/RequestApi'
+import PlaylistCreateModal from '../../shared/modals/PlaylistCreateModal'
 import RequestPlaylistSide from './components/RequestPlaylistSide/RequestPlaylistSide'
 import type { Request } from '../../types/request'
 import {
@@ -90,12 +87,7 @@ export default function PlaylistSide({
   const handleSidebar = () => setSidebarCollapsed((s) => !s)
   const closeModal = () => setActiveModal(null)
 
-  const addApi =
-    activeModal === 'playlist'
-      ? addPlaylist
-      : activeModal === 'request'
-        ? addRequest
-        : null
+  const addApi = activeModal === 'playlist' ? addPlaylist : null
 
   const handleCreated = async (newId: number) => {
     refreshPlaylists()
@@ -191,7 +183,7 @@ export default function PlaylistSide({
           </MenuModal>
 
           {addApi && (
-            <PlaylistNRequestCreateModal
+            <PlaylistCreateModal
               isOpen={activeModal !== null}
               onClose={closeModal}
               onCreated={handleCreated}

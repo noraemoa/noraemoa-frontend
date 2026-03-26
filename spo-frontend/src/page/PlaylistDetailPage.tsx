@@ -11,6 +11,7 @@ import { useDetailPage } from '../features/detail/hooks/useDetailPage'
 import { useTrackSearch } from '../features/search/hooks/useTrackSearch'
 import DetailTrackSection from '../features/detail/components/DetailTrackSection/DetailTrackSection'
 import DetailSearchPanel from '../features/detail/components/DetailSearchPanel/DetailSearchPanel'
+import PageTabs from '../shared/components/PageTabs'
 
 export type Source = 'playlist' | 'request'
 export type Detail = {
@@ -97,6 +98,9 @@ export default function PlaylistDetailPage() {
   if (!detail) return <div>Not found</div>
   return (
     <div className={styles.page}>
+      <div className={styles.tabsWrap}>
+        <PageTabs />
+      </div>
       <DetailHero
         playlistId={validId}
         srcThumbnailUrl={srcThumbnailUrl}

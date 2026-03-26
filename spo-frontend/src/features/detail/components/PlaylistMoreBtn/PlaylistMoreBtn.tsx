@@ -38,11 +38,12 @@ export default function PlaylistMoreBtn({
     try {
       if (source === 'playlist') {
         await deletePlaylist(numericId)
+        navigate('/')
       } else if (source === 'request') {
         await deleteRequest(numericId)
+        navigate('/community')
       }
       refreshPlaylists()
-      navigate('/')
     } catch (e) {
       console.error(e)
     } finally {

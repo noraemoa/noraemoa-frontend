@@ -32,3 +32,13 @@ export interface PlaylistDetails {
   visibility: Visibility
   liked: boolean
 }
+
+export interface PopularPlaylist {
+  id: number
+  userId: number
+  username: string
+  title: string
+  thumbnailUrl?: string | null
+  visibility: Visibility
+  likeCount: number
+}

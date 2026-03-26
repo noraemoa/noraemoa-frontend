@@ -3,7 +3,6 @@ import ReactModal from 'react-modal'
 // import { addPlaylist } from '../../features/playlists/api/PlaylistApi'
 import type { AxiosResponse } from 'axios'
 import type { Playlist } from '../../types/playlist'
-import type { RequestDetail } from '../../types/request'
 
 const customModalStyles: ReactModal.Styles = {
   overlay: {
@@ -35,10 +34,10 @@ interface Props {
   isOpen: boolean
   onClose: () => void
   onCreated: (newId: number) => Promise<void> | void
-  addApi: (title: string) => Promise<AxiosResponse<Playlist | RequestDetail>>
+  addApi: (title: string) => Promise<AxiosResponse<Playlist>>
 }
 
-export default function PlaylistNRequestCreateModal({
+export default function PlaylistCreateModal({
   isOpen,
   onClose,
   onCreated,
