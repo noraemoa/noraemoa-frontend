@@ -5,7 +5,7 @@ import { useAuthStore } from "../../../shared/auth/authStore";
 import type { LoginResponseDto } from "../../../types/auth";
 
 export async function login(email: string, password: string) {
-  const res = await authApi.post<LoginResponseDto>("/login", {
+  const res = await authApi.post<LoginResponseDto>("/auth/login", {
     email,
     password,
   });
@@ -14,13 +14,13 @@ export async function login(email: string, password: string) {
 }
 
 export async function refresh() {
-  const res = await authApi.post<LoginResponseDto>("/refresh");
+  const res = await authApi.post<LoginResponseDto>("/auth/refresh");
   useAuthStore.getState().setSession(res.data);
   return res.data.accessToken;
 }
 
 export async function logout() {
-  await authApi.post("/logout");
+  await authApi.post("/auth/logout");
   useAuthStore.getState().clearSession();
 }
 
@@ -29,7 +29,7 @@ export async function signup(
   username: string,
   password: string,
 ) {
-  await authApi.post("/signup", {
+  await authApi.post("/auth/signup", {
     email,
     username,
     password,
