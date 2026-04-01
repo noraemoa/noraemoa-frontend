@@ -1,83 +1,93 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { searchTrack } from '../features/track/api/TrackApi'
-import type { Artist } from '../types/search'
-import styles from '../features/search/components/SearchPage.module.css'
-import { getArtist } from '../features/search/api/ArtistApi'
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { searchTrack } from "../features/track/api/TrackApi";
+import type { Artist } from "../types/search";
+import styles from "../features/search/components/SearchPage.module.css";
+import { getArtist } from "../features/search/api/ArtistApi";
 import {
   addTrackToPlaylist,
   getMyPlaylists,
-} from '../features/playlists/api/PlaylistApi'
-import type { Track, TrackCreateRequestDto } from '../types/track'
-import MenuModal from '../shared/modals/MenuModal'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import type { Playlist } from '../types/playlist'
-import SearchItems from '../features/search/components/SearchItems'
+} from "../features/playlists/api/PlaylistApi";
+import type { Track, TrackCreateRequestDto } from "../types/track";
+import MenuModal from "../shared/modals/MenuModal";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import type { Playlist } from "../types/playlist";
+import SearchItems from "../features/search/components/SearchItems";
 
 export default function SearchPage() {
-  const { id } = useParams()
-  const [tracks, setTracks] = useState<Track | null>(null)
-  const [artist, setArtist] = useState<Artist | null>(null)
-  const [playlists, setPlaylists] = useState<Playlist[]>([])
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const [tracks, setTracks] = useState<Track | null>(null);
+  const [artist, setArtist] = useState<Artist | null>(null);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const navigate = useNavigate();
 
-  const keyword = id ?? ''
+  const keyword = id ?? "";
 
   const handleAddTrack = async (
     playlistId: number,
-    dto: TrackCreateRequestDto
+    dto: TrackCreateRequestDto,
   ) => {
     try {
-      await addTrackToPlaylist(playlistId, dto)
-      navigate(`/detail/playlist/${playlistId}`)
+      await addTrackToPlaylist(playlistId, dto);
+      navigate(`/detail/playlist/${playlistId}`);
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-  }
+  };
 
   const handleFetchPlaylists = async () => {
     try {
-      const playlistsRes = await getMyPlaylists()
-      setPlaylists(playlistsRes.data)
+      const playlistsRes = await getMyPlaylists();
+      const data = playlistsRes.data;
+
+      if (Array.isArray(data)) {
+        setPlaylists(data);
+      } else if (Array.isArray(data?.content)) {
+        setPlaylists(data.content);
+      } else {
+        setPlaylists([]);
+        console.error("Unexpected playlists response:", data);
+      }
     } catch (e) {
-      console.error(e)
+      console.error(e);
+      setPlaylists([]);
     }
-  }
+  };
 
   useEffect(() => {
     const fetchTracks = async () => {
       try {
-        const tracksRes = await searchTrack(keyword)
-        setTracks(tracksRes.data)
+        const tracksRes = await searchTrack(keyword);
+        setTracks(tracksRes.data);
       } catch (e) {
-        console.error(e)
-        setTracks(null)
+        console.error(e);
+        setTracks(null);
       }
-    }
+    };
 
-    fetchTracks()
-  }, [keyword])
+    fetchTracks();
+  }, [keyword]);
 
   useEffect(() => {
-    if (!tracks?.tracks?.length) return
+    if (!tracks?.tracks?.length) return;
 
     const fetchArtist = async () => {
       try {
-        const artistId = tracks.tracks.at(0)?.artist?.artistId
-        if (!artistId) return
-        const artistRes = await getArtist(artistId)
-        setArtist(artistRes.data)
+        const artistId = tracks.tracks.at(0)?.artist?.artistId;
+        if (!artistId) return;
+        const artistRes = await getArtist(artistId);
+        setArtist(artistRes.data);
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
-    }
+    };
 
-    fetchArtist()
-  }, [tracks])
+    fetchArtist();
+  }, [tracks]);
 
   useEffect(() => {
-    handleFetchPlaylists()
-  }, [])
+    handleFetchPlaylists();
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -112,7 +122,7 @@ export default function SearchPage() {
               <div className={styles.artistLabel}>대표 아티스트</div>
               <img
                 src={artist?.images?.at(0)?.url}
-                alt={artist?.name ?? 'artist'}
+                alt={artist?.name ?? "artist"}
                 className={styles.artistImage}
               />
               <div className={styles.artistName}>{artist?.name ?? keyword}</div>
@@ -140,26 +150,27 @@ export default function SearchPage() {
                       collisionPadding={3}
                       sticky="always"
                     >
-                      {playlists.map((p) => (
-                        <DropdownMenu.Item asChild key={p.id}>
-                          <button
-                            type="button"
-                            className={styles.menuItem}
-                            onClick={() =>
-                              handleAddTrack(p.id, {
-                                spotifyId: track.spotifyId,
-                                name: track.name,
-                                artist: track.artistName,
-                                album: track.album,
-                                imageUrl: track.imageUrl,
-                                durationMs: track.durationMs,
-                              })
-                            }
-                          >
-                            {p.title}
-                          </button>
-                        </DropdownMenu.Item>
-                      ))}
+                      {Array.isArray(playlists) &&
+                        playlists.map((p) => (
+                          <DropdownMenu.Item asChild key={p.id}>
+                            <button
+                              type="button"
+                              className={styles.menuItem}
+                              onClick={() =>
+                                handleAddTrack(p.id, {
+                                  spotifyId: track.spotifyId,
+                                  name: track.name,
+                                  artist: track.artistName,
+                                  album: track.album,
+                                  imageUrl: track.imageUrl,
+                                  durationMs: track.durationMs,
+                                })
+                              }
+                            >
+                              {p.title}
+                            </button>
+                          </DropdownMenu.Item>
+                        ))}
                     </DropdownMenu.Content>
                   </MenuModal>
                 )}
@@ -169,5 +180,5 @@ export default function SearchPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

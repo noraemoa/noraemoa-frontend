@@ -1,58 +1,58 @@
-import { useEffect, useState } from 'react'
-import type { UserResponse } from '../types/user'
-import { getMyInfo, updateUsername } from '../features/user/api/UserApi'
-import { type LikedTrackItem } from '../types/track'
-import { getLikedTracks } from '../features/track/api/TrackApi'
-import type { LikedPlaylist, Playlist } from '../types/playlist'
+import { useEffect, useState } from "react";
+import type { UserResponse } from "../types/user";
+import { getMyInfo, updateUsername } from "../features/user/api/UserApi";
+import { type LikedTrackItem } from "../types/track";
+import { getLikedTracks } from "../features/track/api/TrackApi";
+import type { LikedPlaylist, Playlist } from "../types/playlist";
 import {
   getLikedPlaylists,
   getPublicPlaylists,
-} from '../features/playlists/api/PlaylistApi'
-import { DEFAULT_THUMBNAIL } from '../utils/image'
-import styles from '../features/profile/components/ProfilePage.module.css'
-import type { DailyTrackStreak } from '../types/dailyTrack'
-import { getCurrentStreak } from '../features/dailyTrack/api/DailyTrackApi'
-import { useNavigate } from 'react-router-dom'
+} from "../features/playlists/api/PlaylistApi";
+import { DEFAULT_THUMBNAIL } from "../utils/image";
+import styles from "../features/profile/components/ProfilePage.module.css";
+import type { DailyTrackStreak } from "../types/dailyTrack";
+import { getCurrentStreak } from "../features/dailyTrack/api/DailyTrackApi";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
-  const [username, setUsername] = useState('')
-  const [draftUsername, setDraftUsername] = useState('')
-  const [isEditingName, setIsEditingName] = useState(false)
+  const [username, setUsername] = useState("");
+  const [draftUsername, setDraftUsername] = useState("");
+  const [isEditingName, setIsEditingName] = useState(false);
 
-  const [likedTracks, setLikedTracks] = useState<LikedTrackItem[]>([])
-  const [publicPlaylists, setPublicPlaylists] = useState<Playlist[]>([])
-  const [likedPlaylists, setLikedPlaylists] = useState<LikedPlaylist[]>([])
-  const [streak, setStreak] = useState(0)
-  const navigate = useNavigate()
+  const [likedTracks, setLikedTracks] = useState<LikedTrackItem[]>([]);
+  const [publicPlaylists, setPublicPlaylists] = useState<Playlist[]>([]);
+  const [likedPlaylists, setLikedPlaylists] = useState<LikedPlaylist[]>([]);
+  const [streak, setStreak] = useState(0);
+  const navigate = useNavigate();
 
   const handlePlaylistDetail = (id: number) => {
-    navigate(`/detail/playlist/${id}`)
-  }
+    navigate(`/detail/playlist/${id}`);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const res = await updateUsername(draftUsername)
-    const nextUsername = res.username ?? draftUsername
-    setUsername(nextUsername)
-    setDraftUsername(nextUsername)
-    setIsEditingName(false)
-  }
+    e.preventDefault();
+    const res = await updateUsername(draftUsername);
+    const nextUsername = res.username ?? draftUsername;
+    setUsername(nextUsername);
+    setDraftUsername(nextUsername);
+    setIsEditingName(false);
+  };
 
   const handleCancelEdit = () => {
-    setDraftUsername(username)
-    setIsEditingName(false)
-  }
+    setDraftUsername(username);
+    setIsEditingName(false);
+  };
 
   const handleSection = (id: number) => {
-    navigate(`/me/${id}`)
-  }
+    navigate(`/me/${id}`);
+  };
 
   useEffect(() => {
     const fetchMyInfo = async () => {
-      const resData: UserResponse = await getMyInfo()
-      setUsername(resData.username)
-      setDraftUsername(resData.username)
-    }
+      const resData: UserResponse = await getMyInfo();
+      setUsername(resData.username);
+      setDraftUsername(resData.username);
+    };
 
     const fetchTrackAndPlaylist = async () => {
       const [tracksRes, publicPlaylistsRes, likedPlaylistsRes, streakRes] =
@@ -61,7 +61,7 @@ export default function ProfilePage() {
           getPublicPlaylists(0, 10),
           getLikedPlaylists(),
           getCurrentStreak(),
-        ])
+        ]);
 
       const publicPlaylistsData: Playlist[] =
         publicPlaylistsRes.data.content.map((p: Playlist) => ({
@@ -69,17 +69,17 @@ export default function ProfilePage() {
           title: p.title,
           creator: p.username,
           thumbnailUrl: p.thumbnailUrl ?? null,
-        }))
+        }));
 
-      setLikedTracks(tracksRes.slice(0, 10))
-      setPublicPlaylists(publicPlaylistsData.slice(0, 10))
-      setLikedPlaylists(likedPlaylistsRes.slice(0, 10))
-      setStreak((streakRes as DailyTrackStreak).currentStreak)
-    }
+      setLikedTracks(tracksRes.slice(0, 10));
+      setPublicPlaylists(publicPlaylistsData.slice(0, 10));
+      setLikedPlaylists(likedPlaylistsRes.slice(0, 10));
+      setStreak((streakRes as DailyTrackStreak).currentStreak);
+    };
 
-    fetchMyInfo()
-    fetchTrackAndPlaylist()
-  }, [])
+    fetchMyInfo();
+    fetchTrackAndPlaylist();
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -191,11 +191,7 @@ export default function ProfilePage() {
                 >
                   <div className={styles.thumbnailWrap}>
                     <img
-                      src={
-                        p.thumbnailUrl
-                          ? `${import.meta.env.VITE_API_URL}${p.thumbnailUrl}`
-                          : DEFAULT_THUMBNAIL
-                      }
+                      src={p.thumbnailUrl || DEFAULT_THUMBNAIL}
                       alt={p.title}
                       className={styles.thumbnail}
                     />
@@ -238,11 +234,7 @@ export default function ProfilePage() {
                 >
                   <div className={styles.thumbnailWrap}>
                     <img
-                      src={
-                        p.thumbnailUrl
-                          ? `${import.meta.env.VITE_API_URL}${p.thumbnailUrl}`
-                          : DEFAULT_THUMBNAIL
-                      }
+                      src={p.thumbnailUrl || DEFAULT_THUMBNAIL}
                       alt={p.playlistTitle}
                       className={styles.thumbnail}
                     />
@@ -260,5 +252,5 @@ export default function ProfilePage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

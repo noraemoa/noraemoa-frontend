@@ -72,7 +72,6 @@ export default function PlaylistDetailPage() {
   const srcThumbnailUrl = thumbnailUrl
     ? `${resolveImageUrl(thumbnailUrl)}?v=${refreshKey}`
     : DEFAULT_THUMBNAIL;
-  console.log("섬네일", srcThumbnailUrl);
 
   const openModal = () => {
     setModalOpen(true);

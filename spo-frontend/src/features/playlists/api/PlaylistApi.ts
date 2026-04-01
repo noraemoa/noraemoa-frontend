@@ -1,181 +1,180 @@
-import { api } from '../../../shared/api/client'
-import type { TrackCreateRequestDto } from '../../../types/track'
+import { api } from "../../../shared/api/client";
+import type { TrackCreateRequestDto } from "../../../types/track";
 
 // get
 export async function getMyPlaylists() {
   try {
-    const playlists = await api.get(`/playlists`)
-    console.log('나야', playlists.data)
-    return playlists.data
+    const playlists = await api.get(`/playlists`);
+    return playlists.data;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function getPublicPlaylists(page: number, size: number) {
   try {
-    const params = { page, size }
-    const playlists = await api.get(`/public/playlists`, { params })
-    return playlists
+    const params = { page, size };
+    const playlists = await api.get(`/public/playlists`, { params });
+    return playlists;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function getAuthPublicPlaylists(page: number, size: number) {
   try {
-    const params = { page, size }
-    const playlists = await api.get(`/public/playlists/me`, { params })
-    return playlists.data
+    const params = { page, size };
+    const playlists = await api.get(`/public/playlists/me`, { params });
+    return playlists.data;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function getPlaylistDetails(playlistId: number) {
   try {
-    const details = await api.get(`/playlists/${playlistId}`)
-    return details
+    const details = await api.get(`/playlists/${playlistId}`);
+    return details;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function getPlaylistTracks(playlistId: number) {
   try {
-    const tracks = await api.get(`/playlists/${playlistId}/tracks`)
-    return tracks
+    const tracks = await api.get(`/playlists/${playlistId}/tracks`);
+    return tracks;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function getLikedPlaylists() {
   try {
-    const playlists = await api.get(`/users/me/liked-playlists`)
-    return playlists.data
+    const playlists = await api.get(`/users/me/liked-playlists`);
+    return playlists.data;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function getPopularPlaylists(page: number, size: number) {
   try {
-    const params = { page, size }
-    const playlists = await api.get(`/playlists/popular`, { params })
-    return playlists.data
+    const params = { page, size };
+    const playlists = await api.get(`/playlists/popular`, { params });
+    return playlists.data;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 //post
 export async function addPlaylist(title: string) {
   try {
-    const data = { title }
-    const response = await api.post(`/playlists`, data)
-    return response
+    const data = { title };
+    const response = await api.post(`/playlists`, data);
+    return response;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export function uploadPlaylistThumbnail(playlistId: number, file: File) {
-  const form = new FormData()
-  form.append('file', file)
+  const form = new FormData();
+  form.append("file", file);
 
   return api.post(`/playlists/${playlistId}/thumbnail`, form, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 }
 
 export async function addTrackToPlaylist(
   playlistId: number,
-  dto: TrackCreateRequestDto
+  dto: TrackCreateRequestDto,
 ) {
   try {
-    const response = await api.post(`/playlists/${playlistId}/tracks`, dto)
-    return response
+    const response = await api.post(`/playlists/${playlistId}/tracks`, dto);
+    return response;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function addPlaylistLike(playlistId: number) {
   try {
-    const response = await api.post(`/playlists/${playlistId}/likes`)
-    return response.data
+    const response = await api.post(`/playlists/${playlistId}/likes`);
+    return response.data;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 // delete
 export async function deletePlaylist(playlistId: number) {
   try {
-    const res = await api.delete(`/playlists/${playlistId}`)
-    console.log(res)
+    const res = await api.delete(`/playlists/${playlistId}`);
+    console.log(res);
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function deleteTrackByPlaylist(
   playlistId: number,
-  trackId: number
+  trackId: number,
 ) {
   try {
-    const res = await api.delete(`/playlists/${playlistId}/tracks/${trackId}`)
-    console.log(res)
+    const res = await api.delete(`/playlists/${playlistId}/tracks/${trackId}`);
+    console.log(res);
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function deletePlaylistLike(playlistId: number) {
   try {
-    const res = await api.delete(`/playlists/${playlistId}/likes`)
-    console.log(res)
+    const res = await api.delete(`/playlists/${playlistId}/likes`);
+    console.log(res);
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 // patch
 export async function updatePlaylistTitle(playlistId: number, title: string) {
   try {
-    const data = { title }
-    const res = await api.patch(`/playlists/${playlistId}`, data)
-    return res
+    const data = { title };
+    const res = await api.patch(`/playlists/${playlistId}`, data);
+    return res;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function updatePlaylistVisibility(
   playlistId: number,
-  visibility: string
+  visibility: string,
 ) {
   try {
-    const data = { visibility }
-    const res = await api.patch(`/playlists/${playlistId}/visibility`, data)
-    return res
+    const data = { visibility };
+    const res = await api.patch(`/playlists/${playlistId}/visibility`, data);
+    return res;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }

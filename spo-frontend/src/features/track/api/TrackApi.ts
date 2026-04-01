@@ -1,45 +1,45 @@
-import { api } from '../../../shared/api/client'
-import type { TrackCreateRequestDto } from '../../../types/track'
+import { api } from "../../../shared/api/client";
+import type { TrackCreateRequestDto } from "../../../types/track";
 
 export async function searchTrack(query: string) {
   try {
     const response = await api.get(`/tracks/search`, {
       params: { q: query },
-    })
-    return response
+    });
+    return response;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function getLikedTracks() {
   try {
-    const response = await api.get(`/users/me/liked-tracks`)
-    console.log(response.data)
-    return response.data
+    const response = await api.get(`/users/me/liked-tracks`);
+    console.log(response.data);
+    return response.data;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function addTrackLike(dto: TrackCreateRequestDto) {
   try {
-    const res = await api.post('/tracks/likes', dto)
-    return res
+    const res = await api.post("/tracks/likes", dto);
+    return res;
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }
 
 export async function deleteTrackLike(spotifyId: string) {
   try {
-    const res = await api.delete(`/tracks/${spotifyId}/likes`)
-    console.log(res)
+    const res = await api.delete(`/tracks/${spotifyId}/likes`);
+    console.log(res);
   } catch (error) {
-    console.error('Error: ' + error)
-    throw error
+    console.error("Error: " + error);
+    throw error;
   }
 }

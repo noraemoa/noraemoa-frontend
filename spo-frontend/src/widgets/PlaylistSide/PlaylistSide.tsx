@@ -1,33 +1,33 @@
-import { useCallback, useEffect, useState } from 'react'
-import styles from './PlaylistSide.module.css'
-import { useNavigate } from 'react-router-dom'
-import { getMyRequests } from '../../features/request/api/RequestApi'
-import PlaylistCreateModal from '../../shared/modals/PlaylistCreateModal'
-import RequestPlaylistSide from './components/RequestPlaylistSide/RequestPlaylistSide'
-import type { Request } from '../../types/request'
+import { useCallback, useEffect, useState } from "react";
+import styles from "./PlaylistSide.module.css";
+import { useNavigate } from "react-router-dom";
+import { getMyRequests } from "../../features/request/api/RequestApi";
+import PlaylistCreateModal from "../../shared/modals/PlaylistCreateModal";
+import RequestPlaylistSide from "./components/RequestPlaylistSide/RequestPlaylistSide";
+import type { Request } from "../../types/request";
 import {
   addPlaylist,
   getMyPlaylists,
-} from '../../features/playlists/api/PlaylistApi'
-import type { Playlist } from '../../types/playlist'
-import MyPlaylistSide from './components/MyPlaylistSide/MyPlaylistSide'
-import MenuModal from '../../shared/modals/MenuModal'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+} from "../../features/playlists/api/PlaylistApi";
+import type { Playlist } from "../../types/playlist";
+import MyPlaylistSide from "./components/MyPlaylistSide/MyPlaylistSide";
+import MenuModal from "../../shared/modals/MenuModal";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 export type PlaylistSideProps = {
-  playlistVersion: number
-  refreshPlaylists: () => void
-  sidebarCollapsed: boolean
-  setSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>
-}
+  playlistVersion: number;
+  refreshPlaylists: () => void;
+  sidebarCollapsed: boolean;
+  setSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-type Kind = 'playlist' | 'request'
-type ModalKind = Kind | null
+type Kind = "playlist" | "request";
+type ModalKind = Kind | null;
 
 const OPTIONS: { optionName: string; kind: Kind }[] = [
-  { optionName: '내 플레이리스트', kind: 'playlist' },
-  { optionName: '추천 플레이리스트', kind: 'request' },
-]
+  { optionName: "내 플레이리스트", kind: "playlist" },
+  { optionName: "추천 플레이리스트", kind: "request" },
+];
 
 export default function PlaylistSide({
   playlistVersion,
@@ -35,28 +35,27 @@ export default function PlaylistSide({
   sidebarCollapsed,
   setSidebarCollapsed,
 }: PlaylistSideProps) {
-  const [requests, setRequests] = useState<Request[]>([])
-  const [playlists, setPlaylists] = useState<Playlist[]>([])
+  const [requests, setRequests] = useState<Request[]>([]);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  const [optionOpen, setOptionOpen] = useState(false)
-  const [selectedKind, setSelectedKind] = useState<Kind>('playlist')
-  const [activeModal, setActiveModal] = useState<ModalKind>(null)
+  const [optionOpen, setOptionOpen] = useState(false);
+  const [selectedKind, setSelectedKind] = useState<Kind>("playlist");
+  const [activeModal, setActiveModal] = useState<ModalKind>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const fetchRequests = useCallback(async () => {
-    const res = await getMyRequests()
+    const res = await getMyRequests();
     const mapped: Request[] = (res.data as Request[]).map((r) => ({
       id: r.id,
       title: r.title,
       thumbnailUrl: r.thumbnailUrl ?? null,
-    }))
-    setRequests(mapped)
-  }, [])
+    }));
+    setRequests(mapped);
+  }, []);
 
   const fetchPlaylists = useCallback(async () => {
-    const res = await getMyPlaylists()
-    console.log('플리', res)
+    const res = await getMyPlaylists();
     const mapped: Playlist[] = (res as Playlist[]).map((p) => ({
       id: p.id,
       userId: p.userId,
@@ -65,42 +64,42 @@ export default function PlaylistSide({
       title: p.title,
       thumbnailUrl: p.thumbnailUrl ?? null,
       visibility: p.visibility,
-    }))
-    setPlaylists(mapped)
-  }, [])
+    }));
+    setPlaylists(mapped);
+  }, []);
 
   useEffect(() => {
     const fetchLists = async () => {
       try {
-        if (selectedKind === 'playlist') {
-          await fetchPlaylists()
+        if (selectedKind === "playlist") {
+          await fetchPlaylists();
         } else {
-          await fetchRequests()
+          await fetchRequests();
         }
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
-    }
+    };
 
-    fetchLists()
-  }, [selectedKind, fetchRequests, fetchPlaylists, playlistVersion])
+    fetchLists();
+  }, [selectedKind, fetchRequests, fetchPlaylists, playlistVersion]);
 
-  const handleSidebar = () => setSidebarCollapsed((s) => !s)
-  const closeModal = () => setActiveModal(null)
+  const handleSidebar = () => setSidebarCollapsed((s) => !s);
+  const closeModal = () => setActiveModal(null);
 
-  const addApi = activeModal === 'playlist' ? addPlaylist : null
+  const addApi = activeModal === "playlist" ? addPlaylist : null;
 
   const handleCreated = async (newId: number) => {
-    refreshPlaylists()
-    closeModal()
-    setSelectedKind(activeModal ?? 'playlist')
-    navigate(`/detail/${activeModal ?? 'playlist'}/${newId}`)
-  }
+    refreshPlaylists();
+    closeModal();
+    setSelectedKind(activeModal ?? "playlist");
+    navigate(`/detail/${activeModal ?? "playlist"}/${newId}`);
+  };
 
   return (
     <>
       <div
-        data-collapsed={sidebarCollapsed ? 'true' : 'false'}
+        data-collapsed={sidebarCollapsed ? "true" : "false"}
         className={styles.playlistSideContainer}
       >
         <div className={styles.plsHeader}>
@@ -108,10 +107,10 @@ export default function PlaylistSide({
             type="button"
             className={styles.sideToggleBtn}
             onClick={handleSidebar}
-            aria-label={sidebarCollapsed ? '사이드바 열기' : '사이드바 접기'}
-            title={sidebarCollapsed ? '사이드바 열기' : '사이드바 접기'}
+            aria-label={sidebarCollapsed ? "사이드바 열기" : "사이드바 접기"}
+            title={sidebarCollapsed ? "사이드바 열기" : "사이드바 접기"}
           >
-            {sidebarCollapsed ? '≡' : '사이드바'}
+            {sidebarCollapsed ? "≡" : "사이드바"}
           </button>
 
           {!sidebarCollapsed && (
@@ -123,7 +122,7 @@ export default function PlaylistSide({
                 <p>
                   {OPTIONS.find((o) => o.kind === selectedKind)!.optionName}
                 </p>
-                <span className={styles.chevron}>{optionOpen ? '−' : '+'}</span>
+                <span className={styles.chevron}>{optionOpen ? "−" : "+"}</span>
               </div>
 
               {optionOpen && (
@@ -132,11 +131,11 @@ export default function PlaylistSide({
                     <div
                       key={o.optionName}
                       className={`${styles.option} ${
-                        selectedKind === o.kind ? styles.optionActive : ''
+                        selectedKind === o.kind ? styles.optionActive : ""
                       }`}
                       onClick={() => {
-                        setSelectedKind(o.kind)
-                        setOptionOpen(false)
+                        setSelectedKind(o.kind);
+                        setOptionOpen(false);
                       }}
                     >
                       {o.optionName}
@@ -148,7 +147,7 @@ export default function PlaylistSide({
           )}
 
           <MenuModal
-            triggerName={!sidebarCollapsed ? '+ 만들기' : '+'}
+            triggerName={!sidebarCollapsed ? "+ 만들기" : "+"}
             className={styles.createTrigger}
           >
             <DropdownMenu.Content
@@ -163,7 +162,7 @@ export default function PlaylistSide({
                 <button
                   type="button"
                   className={styles.menuItem}
-                  onClick={() => setActiveModal('playlist')}
+                  onClick={() => setActiveModal("playlist")}
                 >
                   플레이리스트
                 </button>
@@ -175,7 +174,7 @@ export default function PlaylistSide({
                 <button
                   type="button"
                   className={styles.menuItem}
-                  onClick={() => setActiveModal('request')}
+                  onClick={() => setActiveModal("request")}
                 >
                   플리 요청
                 </button>
@@ -194,7 +193,7 @@ export default function PlaylistSide({
         </div>
 
         <div className={styles.playlistListWrapper}>
-          {selectedKind === 'playlist' ? (
+          {selectedKind === "playlist" ? (
             <MyPlaylistSide
               playlists={playlists}
               sidebarOpen={!sidebarCollapsed}
@@ -210,5 +209,5 @@ export default function PlaylistSide({
         </div>
       </div>
     </>
-  )
+  );
 }
