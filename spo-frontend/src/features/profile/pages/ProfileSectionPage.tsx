@@ -90,7 +90,6 @@ export default function ProfileSectionPage() {
           ) : (
             <div className={styles.grid}>
               {sectionItems.map((item) => {
-                console.log(item.name, ": ", item);
                 return (
                   <article
                     key={item.id}

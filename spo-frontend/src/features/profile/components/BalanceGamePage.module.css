@@ -1,0 +1,379 @@
+.page {
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background:
+        linear-gradient(180deg, rgba(31, 32, 33, 0.98) 0%, rgba(39, 40, 41, 1) 100%);
+}
+
+.hero {
+    width: 100%;
+    padding: 28px 28px 14px;
+    box-sizing: border-box;
+}
+
+.heroInner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 14% 18%, rgba(255, 246, 224, 0.05) 0%, transparent 34%),
+        linear-gradient(180deg, rgba(97, 103, 122, 0.16) 0%, rgba(31, 32, 33, 0.98) 58%),
+        #1f2021;
+    border: 1px solid rgba(216, 217, 218, 0.08);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) 300px;
+    gap: 28px;
+    align-items: center;
+}
+
+.heroCopy {
+    min-width: 0;
+}
+
+.label {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 246, 224, 0.06);
+    border: 1px solid rgba(255, 246, 224, 0.08);
+    color: #FFF6E0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.title {
+    margin: 14px 0 0;
+    color: #FFFFFF;
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+}
+
+.description {
+    margin: 16px 0 0;
+    color: rgba(216, 217, 218, 0.68);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 560px;
+}
+
+.progressCard {
+    padding: 18px;
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, rgba(52, 56, 65, 0.34) 0%, rgba(34, 35, 36, 0.96) 100%);
+    border: 1px solid rgba(216, 217, 218, 0.08);
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.015);
+}
+
+.progressTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.progressLabel {
+    color: rgba(216, 217, 218, 0.72);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.progressValue {
+    color: #FFF6E0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.progressBar {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(97, 103, 122, 0.24);
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(255, 246, 224, 0.68) 0%, rgba(255, 246, 224, 0.92) 100%);
+    transition: width 0.2s ease;
+}
+
+.content {
+    width: 100%;
+    padding: 6px 28px 36px;
+    box-sizing: border-box;
+}
+
+.panel {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 18px;
+    background:
+        linear-gradient(180deg, rgba(40, 41, 43, 0.98) 0%, rgba(31, 32, 33, 0.99) 100%);
+    border: 1px solid rgba(216, 217, 218, 0.08);
+    box-shadow:
+        0 18px 34px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.018);
+}
+
+.questionMetaRow {
+    margin-bottom: 16px;
+}
+
+.questionBadge {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 246, 224, 0.06);
+    border: 1px solid rgba(255, 246, 224, 0.08);
+    color: #FFF6E0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.questionTitle {
+    margin: 0;
+    max-width: 780px;
+    color: #FFFFFF;
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 800;
+    line-height: 1.34;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+}
+
+.choiceGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 30px;
+}
+
+.choiceCard {
+    min-height: 220px;
+    border: 1px solid rgba(216, 217, 218, 0.08);
+    border-radius: 18px;
+    background:
+        linear-gradient(180deg, rgba(58, 63, 73, 0.24) 0%, rgba(35, 36, 38, 0.98) 100%);
+    color: #D8D9DA;
+    padding: 28px 24px;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease,
+        box-shadow 0.16s ease,
+        color 0.16s ease;
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.015);
+}
+
+.choiceCard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top left, rgba(255, 246, 224, 0.055) 0%, transparent 34%);
+    opacity: 0;
+    transition: opacity 0.16s ease;
+    pointer-events: none;
+}
+
+.choiceCard:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 246, 224, 0.12);
+    background:
+        linear-gradient(180deg, rgba(97, 103, 122, 0.24) 0%, rgba(35, 36, 38, 0.98) 100%);
+    color: #FFFFFF;
+    box-shadow:
+        0 16px 28px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.choiceCard:hover::before {
+    opacity: 1;
+}
+
+.choiceCardActive {
+    border-color: rgba(255, 246, 224, 0.18);
+    background:
+        linear-gradient(180deg, rgba(255, 246, 224, 0.09) 0%, rgba(35, 36, 38, 0.98) 100%);
+    color: #FFF6E0;
+    box-shadow:
+        0 18px 30px rgba(0, 0, 0, 0.22),
+        0 0 0 1px rgba(255, 246, 224, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.choiceCardActive::before {
+    opacity: 1;
+}
+
+.choiceText {
+    display: block;
+    position: relative;
+    z-index: 1;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.65;
+    letter-spacing: -0.015em;
+    word-break: keep-all;
+}
+
+.actionRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(216, 217, 218, 0.08);
+}
+
+.primaryBtn,
+.secondaryBtn {
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease,
+        opacity 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.primaryBtn {
+    border: 0;
+    background: #343841;
+    color: #FFF6E0;
+}
+
+.primaryBtn:hover:not(:disabled) {
+    background: #61677A;
+    transform: translateY(-1px);
+}
+
+.primaryBtn:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.secondaryBtn {
+    border: 1px solid rgba(216, 217, 218, 0.08);
+    background: rgba(52, 56, 65, 0.32);
+    color: #D8D9DA;
+}
+
+.secondaryBtn:hover {
+    background: rgba(97, 103, 122, 0.28);
+    border-color: rgba(255, 246, 224, 0.1);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+    .hero {
+        padding: 24px 20px 12px;
+    }
+
+    .heroInner {
+        grid-template-columns: 1fr;
+        padding: 28px;
+        gap: 22px;
+    }
+
+    .content {
+        padding: 6px 20px 28px;
+    }
+
+    .panel {
+        padding: 24px;
+    }
+
+    .choiceGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .choiceCard {
+        min-height: 170px;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 20px 16px 10px;
+    }
+
+    .heroInner {
+        padding: 24px;
+    }
+
+    .content {
+        padding: 6px 16px 24px;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 30px;
+    }
+
+    .questionTitle {
+        font-size: 24px;
+    }
+
+    .choiceGrid {
+        margin-top: 22px;
+        gap: 12px;
+    }
+
+    .choiceCard {
+        min-height: 140px;
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .choiceText {
+        font-size: 16px;
+    }
+
+    .actionRow {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .primaryBtn,
+    .secondaryBtn {
+        width: 100%;
+    }
+}

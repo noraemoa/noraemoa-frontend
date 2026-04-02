@@ -1,36 +1,35 @@
-import { useState } from 'react'
-import { searchTrack } from '../../track/api/TrackApi'
-import type { Track } from '../../../types/track'
+import { useState } from "react";
+import { searchTrack } from "../../track/api/TrackApi";
+import type { Track } from "../../../types/track";
 
 export function useTrackSearch() {
-  const [searchTracks, setSearchTracks] = useState<Track | null>(null)
-  const [searchModalOpen, setSearchModalOpen] = useState(false)
-  const [search, setSearch] = useState('')
-  const [isSubmitted, setSubmit] = useState(false)
+  const [searchTracks, setSearchTracks] = useState<Track | null>(null);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [isSubmitted, setSubmit] = useState(false);
 
   const fetchTracks = async (keyword: string) => {
-    const tracksRes = await searchTrack(keyword)
-    console.log('tracks: ', tracksRes.data)
-    setSearchTracks(tracksRes.data)
-  }
+    const tracksRes = await searchTrack(keyword);
+    setSearchTracks(tracksRes.data);
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (isSubmitted) return
+    e.preventDefault();
+    if (isSubmitted) return;
 
     try {
-      setSubmit(true)
-      await fetchTracks(search)
-      setSearch('')
+      setSubmit(true);
+      await fetchTracks(search);
+      setSearch("");
     } catch (err) {
-      console.error(err)
+      console.error(err);
     } finally {
-      setSubmit(false)
+      setSubmit(false);
     }
-  }
+  };
   const handleCloseSearch = () => {
-    setSearchModalOpen(false)
-    setSearchTracks(null)
-  }
+    setSearchModalOpen(false);
+    setSearchTracks(null);
+  };
 
   return {
     searchTracks,
@@ -41,5 +40,5 @@ export function useTrackSearch() {
     handleSubmit,
     handleCloseSearch,
     setSearchModalOpen,
-  }
+  };
 }
